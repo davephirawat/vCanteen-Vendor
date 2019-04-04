@@ -1,6 +1,7 @@
 package com.example.vcanteenvendor;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     OrderList List;
     List<Order> orderList;
-
+    private ProgressDialog progressDialog;
 
 
 
@@ -126,6 +127,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void orderLoadUp() {
 
+        progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog = ProgressDialog.show(MainActivity.this, "",
+                "Loading. Please wait...", true);
+
         String url="https://vcanteen.herokuapp.com/";
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -150,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
                 List = response.body();
                 ListAdapter testAdapter = new OrderAdapter(MainActivity.this, List); //Put the arraylist here
                 orderListListView.setAdapter(testAdapter);
+                progressDialog.dismiss();
             }
 
             @Override

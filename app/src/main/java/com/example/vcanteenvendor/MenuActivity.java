@@ -1,5 +1,6 @@
 package com.example.vcanteenvendor;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,6 +43,8 @@ public class MenuActivity extends AppCompatActivity {
     CombinationAlacarteList combinationAlacarteList;
 
     RequestOptions option = new RequestOptions().centerCrop();
+
+    ProgressDialog progressDialog;
 
 
     @Override
@@ -107,6 +110,10 @@ public class MenuActivity extends AppCompatActivity {
 
     private void menuLoadUp() {
 
+        progressDialog = new ProgressDialog(MenuActivity.this);
+        progressDialog = ProgressDialog.show(MenuActivity.this, "",
+                "Loading. Please wait...", true);
+
         String url = "https://vcanteen.herokuapp.com/";
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -138,6 +145,8 @@ public class MenuActivity extends AppCompatActivity {
                 alacarteMenuAdapter = new MenuRecyclerviewAdapter(MenuActivity.this, combinationAlacarteList.alacarteList);
                 alacarteMenuRecyclerView.setLayoutManager(new GridLayoutManager(MenuActivity.this, 4));
                 alacarteMenuRecyclerView.setAdapter(alacarteMenuAdapter);
+
+                progressDialog.dismiss();
 
                 //combinationMenuAdapter.notifyDataSetChanged();
                 //alacarteMenuAdapter.notifyDataSetChanged();

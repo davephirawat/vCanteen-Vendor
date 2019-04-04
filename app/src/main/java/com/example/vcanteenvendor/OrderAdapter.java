@@ -1,6 +1,7 @@
 package com.example.vcanteenvendor;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -36,6 +37,7 @@ public class OrderAdapter extends ArrayAdapter {
     Button cancelButton;
     Button doneButton;
     Order singleOrder;
+    ProgressDialog progressDialog;
 
 
 
@@ -142,6 +144,9 @@ public class OrderAdapter extends ArrayAdapter {
 
                         //orderCancel();
                         //another put
+                        mOrderArrayList.remove(position);
+                        OrderAdapter.super.notifyDataSetChanged();
+
 
                         dialog.dismiss();
 

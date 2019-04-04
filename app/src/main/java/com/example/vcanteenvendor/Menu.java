@@ -21,7 +21,7 @@ public class Menu {
 
 
 
-    @SerializedName("foodImageUrl")
+    @SerializedName("foodImage")
     private String foodImg;
 
     @SerializedName("foodStatus")

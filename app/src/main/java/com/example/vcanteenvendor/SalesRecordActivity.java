@@ -1,6 +1,7 @@
 package com.example.vcanteenvendor;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -66,6 +67,8 @@ public class SalesRecordActivity extends AppCompatActivity {
 
 
     ListView salesRecordListListView;
+
+    ProgressDialog progressDialog;
 
 //    List<SalesRecord> salesRecordOrder;
   //  SalesRecord List;
@@ -140,6 +143,10 @@ public class SalesRecordActivity extends AppCompatActivity {
 
     private void getSalesRecordArrayList() {
 
+        progressDialog = new ProgressDialog(SalesRecordActivity.this);
+        progressDialog = ProgressDialog.show(SalesRecordActivity.this, "",
+                "Loading. Please wait...", true);
+
         String url = "https://vcanteen.herokuapp.com/";
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -190,37 +197,50 @@ public class SalesRecordActivity extends AppCompatActivity {
                 //listView.setAdapter(adapter);
 
                 //ArrayAdapter<SalesRecordArrayList> itemsAdapter = new ArrayAdapter<String>(this, R.layout.sales_record_row, item);
-
-
-
-                String bestSellingName = response.body().getBestSeller().getOrdername();
-                int bestSellingAmount = response.body().getBestSeller().getAmount();
-                int totalDailySales = response.body().getTotalDailySales().getSum();
-                //Toast.makeText(getApplicationContext(), bestSellingName, Toast.LENGTH_LONG).show();
-                best_seller_dish.setText(bestSellingName);
-                number_sold.setText(bestSellingAmount + " DISHES");
-                total_sales.setText(totalDailySales+" ฿ ");
-
-                //ArrayList<SalesRecordOrder> salesRecordOrders = new ArrayList<SalesRecordOrder>();
-                // Create the adapter to convert the array to views
-
-                Log.w("gson response :",new Gson().toJson(response.body().getSalesRecordOrders())); //มาแล้ว เกินตรงนี้ระเบิด
-
-                ArrayList<SalesRecordOrder> order = response.body().getSalesRecordOrders();
-                ArrayList<SalesRecordOrder> temp = new ArrayList<SalesRecordOrder>();
-                for(int i = 0 ; i<order.size() ; i++){
-                    int orderId = order.get(i).getOrderIdSales();
-                    String orderName  = order.get(i).getOrderNameSales();
-                    String orderNameExtra = order.get(i).getOrderNameExtraSales();
-                    int orderPrice =  order.get(i).getOrderPriceSales();
-                    SalesRecordOrder newOrderList = new SalesRecordOrder(orderId, orderName ,orderNameExtra ,orderPrice);
+                if (response.body().getTotalDailySales().getSum() == 0){
+                    best_seller_dish.setText("No sales today" );
+                    number_sold.setText( "0 DISHES");
+                    total_sales.setText( "NO DATA");
+                    ArrayList<SalesRecordOrder> temp = new ArrayList<SalesRecordOrder>();
+                    SalesRecordOrder newOrderList = new SalesRecordOrder(0, "Null","Null", 0);
                     temp.add(newOrderList);
+                    SalesRecordAdapter adapter = new SalesRecordAdapter(SalesRecordActivity.this, temp);
+                    salesRecordListListView.setAdapter(adapter);
+                    Log.d("Test if", "if");
+                    progressDialog.dismiss();
+                    return;
+                } else {
+
+                    String bestSellingName = response.body().getBestSeller().getOrdername();
+                    int bestSellingAmount = response.body().getBestSeller().getAmount();
+                    int totalDailySales = response.body().getTotalDailySales().getSum();
+                    //Toast.makeText(getApplicationContext(), bestSellingName, Toast.LENGTH_LONG).show();
+                    best_seller_dish.setText(bestSellingName);
+                    number_sold.setText(bestSellingAmount + " DISHES");
+                    total_sales.setText(totalDailySales + " ฿ ");
+
+                    //ArrayList<SalesRecordOrder> salesRecordOrders = new ArrayList<SalesRecordOrder>();
+                    // Create the adapter to convert the array to views
+
+                    Log.w("gson response :", new Gson().toJson(response.body().getSalesRecordOrders())); //มาแล้ว เกินตรงนี้ระเบิด
+
+                    ArrayList<SalesRecordOrder> order = response.body().getSalesRecordOrders();
+                    ArrayList<SalesRecordOrder> temp = new ArrayList<SalesRecordOrder>();
+                    for (int i = 0; i < order.size(); i++) {
+                        int orderId = order.get(i).getOrderIdSales();
+                        String orderName = order.get(i).getOrderNameSales();
+                        String orderNameExtra = order.get(i).getOrderNameExtraSales();
+                        int orderPrice = order.get(i).getOrderPriceSales();
+                        SalesRecordOrder newOrderList = new SalesRecordOrder(orderId, orderName, orderNameExtra, orderPrice);
+                        temp.add(newOrderList);
+                    }
+
+
+                    SalesRecordAdapter adapter = new SalesRecordAdapter(SalesRecordActivity.this, temp);
+
+                    salesRecordListListView.setAdapter(adapter);
+                    progressDialog.dismiss();
                 }
-
-
-                SalesRecordAdapter adapter = new SalesRecordAdapter(SalesRecordActivity.this, temp);
-
-                salesRecordListListView.setAdapter(adapter);
 
 
 

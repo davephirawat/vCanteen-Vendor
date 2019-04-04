@@ -75,7 +75,7 @@ public class MenuAlacarteRecyclerviewAdapter extends RecyclerView.Adapter<MenuAl
         //holder.card_food_price.setText(mData.get(position).getFoodPrice());
         holder.card_food_price.setText(String.format ("%d", mData.get(position).getFoodPrice()));
 
-        if (!mData.get(position).getFoodImg().equals(""))
+        //if (!mData.get(position).getFoodImg().equals(""))
         Glide.with(mContext).load(mData.get(position).getFoodImg()).apply(option).into(holder.menuImg); //Set image via url using Glide
 
         if(mData.get(position).getFoodStatus().equals("SOLD_OUT")){

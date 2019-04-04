@@ -1,6 +1,7 @@
 package com.example.vcanteenvendor;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -33,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,6 +89,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     Vendor vendor;
     VendorInfoArray vendorInfoArray;
+
+    ProgressDialog progressDialog;
 
     RequestOptions option = new RequestOptions().centerCrop();
 
@@ -375,6 +379,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void accountJSONLoadUp() {
 
+        progressDialog = new ProgressDialog(SettingsActivity.this);
+        progressDialog = ProgressDialog.show(SettingsActivity.this, "",
+                "Loading. Please wait...", true);
+
         url="https://vcanteen.herokuapp.com/";
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -386,6 +394,8 @@ public class SettingsActivity extends AppCompatActivity {
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
         Call<VendorInfoArray> call = jsonPlaceHolderApi.getVendorInfo(1);
 
+        progressDialog.dismiss();
+
         call.enqueue(new Callback<VendorInfoArray>() {
             @Override
             public void onResponse(Call<VendorInfoArray> call, Response<VendorInfoArray> response) {
@@ -396,8 +406,8 @@ public class SettingsActivity extends AppCompatActivity {
                     return;
                 }
 
-                vendorInfoArray = response.body();
 
+                vendorInfoArray = response.body();
 
                 if (vendorInfoArray != null){
 
@@ -442,13 +452,14 @@ public class SettingsActivity extends AppCompatActivity {
                 }
 
 
+
             }
 
             @Override
             public void onFailure(Call<VendorInfoArray> call, Throwable t) {
                 vendorProfile.setText(t.getMessage());
 
-
+                progressDialog.dismiss();
             }
         });
 
