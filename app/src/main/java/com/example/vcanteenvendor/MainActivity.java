@@ -111,11 +111,14 @@ public class MainActivity extends AppCompatActivity {
 
         //////////////////////////////////////////   Order Adapter   //////////////////////////////////////
 
+
         List = new OrderList(orderList);
+
 
         orderLoadUp(); //GET DATA FROM JSON
 
-
+        /*ListAdapter testAdapter = new OrderAdapter(this, List); //Put the arraylist here
+        orderListListView.setAdapter(testAdapter);*/
 
 
 
@@ -144,13 +147,9 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("\n\n\n\n********************"+ "Code: " + response.code() +"********************\n\n\n\n");
                     return;
                 }
-
                 List = response.body();
                 ListAdapter testAdapter = new OrderAdapter(MainActivity.this, List); //Put the arraylist here
                 orderListListView.setAdapter(testAdapter);
-
-
-
             }
 
             @Override

@@ -39,10 +39,12 @@ public class OrderAdapter extends ArrayAdapter {
 
 
 
+
     OrderAdapter(Context context, OrderList List){
         super(context, R.layout.order_row_relative , List.orderList);
         mOrderList=List;
         mOrderArrayList = List.orderList;
+
     }
 
     /*OrderAdapter(Context context, String[] orderList){
@@ -51,6 +53,7 @@ public class OrderAdapter extends ArrayAdapter {
     }*/
 
     @Override
+
     public View getView(final int position, View convertView, ViewGroup parent){
 
         LayoutInflater orderInflater = LayoutInflater.from(getContext());
@@ -150,12 +153,15 @@ public class OrderAdapter extends ArrayAdapter {
             }
         });
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mOrderArrayList.remove(position);
                 OrderAdapter.super.notifyDataSetChanged();
+
 
 
                 //orderDone();

@@ -34,6 +34,7 @@ public class MenuActivity extends AppCompatActivity {
     RecyclerView combinationMenuRecyclerView;
     RecyclerView alacarteMenuRecyclerView;
 
+
     MenuRecyclerviewAdapter combinationMenuAdapter;
     MenuRecyclerviewAdapter alacarteMenuAdapter;
     
@@ -120,6 +121,45 @@ public class MenuActivity extends AppCompatActivity {
 
         Call<CombinationAlacarteList> call = jsonPlaceHolderApi.getAllMenu(1); //SET LOGIC TO INSERT ID HERE
 
+        /*lstMenu = new ArrayList<>();
+        lstMenu.add(new Menu("Fried Chicken with Sticky Rice",300,0001,R.drawable.food_pic1));
+        lstMenu.add(new Menu("Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice",450,0005,R.drawable.food_pic2));
+        lstMenu.add(new Menu("Fried Chicken",50,0002,R.drawable.food_pic3));
+        lstMenu.add(new Menu("Sticky Rice",10,0003,R.drawable.food_pic4));
+        lstMenu.add(new Menu("Fried Chicken with Sticky Rice",120,0004,R.drawable.food_pic5));
+        lstMenu.add(new Menu("Fried Chicken with Sticky Rice",300,0001,R.drawable.food_pic1));
+        lstMenu.add(new Menu("Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice",450,0005,R.drawable.food_pic2));
+        lstMenu.add(new Menu("Fried Chicken",50,0002,R.drawable.food_pic3));
+        lstMenu.add(new Menu("Sticky Rice",10,0003,R.drawable.food_pic4));
+        lstMenu.add(new Menu("Fried Chicken with Sticky Rice",120,0004,R.drawable.food_pic5));
+        lstMenu.add(new Menu("Fried Chicken with Sticky Rice",300,0001,R.drawable.food_pic1));
+        lstMenu.add(new Menu("Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice",450,0005,R.drawable.food_pic2));
+        lstMenu.add(new Menu("Fried Chicken",50,0002,R.drawable.food_pic3));
+        lstMenu.add(new Menu("Sticky Rice",10,0003,R.drawable.food_pic4));
+        lstMenu.add(new Menu("Fried Chicken with Sticky Rice",120,0004,R.drawable.food_pic5));*/
+
+        menuLoadUp();
+
+
+
+
+
+    }
+
+    private void menuLoadUp() {
+
+        String url="https://vcanteen.herokuapp.com/";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
+        Call<CombinationAlacarteList> call = jsonPlaceHolderApi.getAllMenu(1); //SET LOGIC TO INSERT ID HERE
+
 
         call.enqueue(new Callback<CombinationAlacarteList>() {
             @Override
@@ -142,6 +182,12 @@ public class MenuActivity extends AppCompatActivity {
 
                 //combinationMenuAdapter.notifyDataSetChanged();
                 //alacarteMenuAdapter.notifyDataSetChanged();
+
+
+
+
+            }
+        });
 
             }
 

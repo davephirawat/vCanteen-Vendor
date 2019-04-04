@@ -52,6 +52,39 @@ public class MenuAlacarteRecyclerviewAdapter extends RecyclerView.Adapter<MenuAl
                 i.putExtra("foodId",mData.get(viewHolder.getAdapterPosition()).getFoodId());
                 i.putExtra("foodName",mData.get(viewHolder.getAdapterPosition()).getFoodName());
                 i.putExtra("price",mData.get(viewHolder.getAdapterPosition()).getFoodPrice());
+                i.putExtra("foodImageUrl",mData.get(viewHolder.getAdapterPosition()).getFoodImg());
+                i.putExtra("foodStatus",mData.get(viewHolder.getAdapterPosition()).getFoodStatus());
+                i.putExtra("foodType",mData.get(viewHolder.getAdapterPosition()).getFoodType());
+                // start the activity
+                mContext.startActivity(i);
+
+            }
+        });
+
+
+        return viewHolder;
+
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+
+        holder.card_food_name.setText(mData.get(position).getFoodName());
+        //holder.card_food_price.setText(mData.get(position).getFoodPrice());
+        holder.card_food_price.setText(String.format ("%d", mData.get(position).getFoodPrice()));
+        Glide.with(mContext).load(mData.get(position).getFoodImg()).apply(option).into(holder.menuImg); //Set image via url using Glide
+
+
+
+        viewHolder.cardViewContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent(mContext,AddEditMenuActivity.class);
+                // passing data to the book activity
+                i.putExtra("foodId",mData.get(viewHolder.getAdapterPosition()).getFoodId());
+                i.putExtra("foodName",mData.get(viewHolder.getAdapterPosition()).getFoodName());
+                i.putExtra("price",mData.get(viewHolder.getAdapterPosition()).getFoodPrice());
                 i.putExtra("foodImage",mData.get(viewHolder.getAdapterPosition()).getFoodImg());
                 i.putExtra("foodStatus",mData.get(viewHolder.getAdapterPosition()).getFoodStatus());
                 i.putExtra("foodType",mData.get(viewHolder.getAdapterPosition()).getFoodType());
@@ -59,6 +92,7 @@ public class MenuAlacarteRecyclerviewAdapter extends RecyclerView.Adapter<MenuAl
                 mContext.startActivity(i);
 
             }
+
         });
 
 
@@ -101,6 +135,7 @@ public class MenuAlacarteRecyclerviewAdapter extends RecyclerView.Adapter<MenuAl
         CardView cardView ;
         TextView soldOutLabel;
         ImageView filter;
+
 
 
         public MyViewHolder(View itemView) {
