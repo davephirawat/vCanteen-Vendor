@@ -357,7 +357,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="LINKED"
-                    android:layout_alignBaseline="@+id/cuNex"
                     android:drawableStart="@drawable/ic_check"
                     android:drawablePadding="8dp"
                     android:fontFamily="@font/sfprotext_regular"

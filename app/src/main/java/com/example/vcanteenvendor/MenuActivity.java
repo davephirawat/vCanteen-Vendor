@@ -37,7 +37,7 @@ public class MenuActivity extends AppCompatActivity {
 
     MenuRecyclerviewAdapter combinationMenuAdapter;
     MenuRecyclerviewAdapter alacarteMenuAdapter;
-    
+
     //List<Menu> lstMenu;
     CombinationAlacarteList combinationAlacarteList;
 
@@ -49,15 +49,14 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        orderStatusButton= (Button) findViewById(R.id.orderStatusButton);
-        menuButton= (Button) findViewById(R.id.menuButton);
-        salesRecordButton= (Button) findViewById(R.id.salesRecordButton);
-        settingsButton= (Button) findViewById(R.id.settingsButton);
+        orderStatusButton = (Button) findViewById(R.id.orderStatusButton);
+        menuButton = (Button) findViewById(R.id.menuButton);
+        salesRecordButton = (Button) findViewById(R.id.salesRecordButton);
+        settingsButton = (Button) findViewById(R.id.settingsButton);
         addMenuButton = (Button) findViewById(R.id.addMenuButton);
 
         combinationMenuRecyclerView = (RecyclerView) findViewById(R.id.combinationMenuRecyclerView);
         alacarteMenuRecyclerView = (RecyclerView) findViewById(R.id.alacarteMenuRecyclerView);
-
 
 
         //////////////////////////////////////////   Navigation   //////////////////////////////////////
@@ -106,49 +105,9 @@ public class MenuActivity extends AppCompatActivity {
 
 
 
-
-    public void menuLoadUp() {
-
-        String url="https://vcanteen.herokuapp.com/";
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-
-        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-
-        Call<CombinationAlacarteList> call = jsonPlaceHolderApi.getAllMenu(1); //SET LOGIC TO INSERT ID HERE
-
-        /*lstMenu = new ArrayList<>();
-        lstMenu.add(new Menu("Fried Chicken with Sticky Rice",300,0001,R.drawable.food_pic1));
-        lstMenu.add(new Menu("Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice",450,0005,R.drawable.food_pic2));
-        lstMenu.add(new Menu("Fried Chicken",50,0002,R.drawable.food_pic3));
-        lstMenu.add(new Menu("Sticky Rice",10,0003,R.drawable.food_pic4));
-        lstMenu.add(new Menu("Fried Chicken with Sticky Rice",120,0004,R.drawable.food_pic5));
-        lstMenu.add(new Menu("Fried Chicken with Sticky Rice",300,0001,R.drawable.food_pic1));
-        lstMenu.add(new Menu("Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice",450,0005,R.drawable.food_pic2));
-        lstMenu.add(new Menu("Fried Chicken",50,0002,R.drawable.food_pic3));
-        lstMenu.add(new Menu("Sticky Rice",10,0003,R.drawable.food_pic4));
-        lstMenu.add(new Menu("Fried Chicken with Sticky Rice",120,0004,R.drawable.food_pic5));
-        lstMenu.add(new Menu("Fried Chicken with Sticky Rice",300,0001,R.drawable.food_pic1));
-        lstMenu.add(new Menu("Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice",450,0005,R.drawable.food_pic2));
-        lstMenu.add(new Menu("Fried Chicken",50,0002,R.drawable.food_pic3));
-        lstMenu.add(new Menu("Sticky Rice",10,0003,R.drawable.food_pic4));
-        lstMenu.add(new Menu("Fried Chicken with Sticky Rice",120,0004,R.drawable.food_pic5));*/
-
-        menuLoadUp();
-
-
-
-
-
-    }
-
     private void menuLoadUp() {
 
-        String url="https://vcanteen.herokuapp.com/";
+        String url = "https://vcanteen.herokuapp.com/";
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -166,39 +125,38 @@ public class MenuActivity extends AppCompatActivity {
             public void onResponse(Call<CombinationAlacarteList> call, Response<CombinationAlacarteList> response) {
 
                 if (!response.isSuccessful()) {
-                    System.out.println("\n\n\n\n********************"+ "Code: " + response.code() +"********************\n\n\n\n");
+                    System.out.println("\n\n\n\n********************" + "Code: " + response.code() + "********************\n\n\n\n");
                     return;
                 }
 
                 combinationAlacarteList = response.body();
 
-                combinationMenuAdapter = new MenuRecyclerviewAdapter(MenuActivity.this,combinationAlacarteList.combinationList);
-                combinationMenuRecyclerView.setLayoutManager(new GridLayoutManager(MenuActivity.this,4));
+                combinationMenuAdapter = new MenuRecyclerviewAdapter(MenuActivity.this, combinationAlacarteList.combinationList);
+                combinationMenuRecyclerView.setLayoutManager(new GridLayoutManager(MenuActivity.this, 4));
                 combinationMenuRecyclerView.setAdapter(combinationMenuAdapter);
 
-                alacarteMenuAdapter = new MenuRecyclerviewAdapter(MenuActivity.this,combinationAlacarteList.alacarteList);
-                alacarteMenuRecyclerView.setLayoutManager(new GridLayoutManager(MenuActivity.this,4));
+                alacarteMenuAdapter = new MenuRecyclerviewAdapter(MenuActivity.this, combinationAlacarteList.alacarteList);
+                alacarteMenuRecyclerView.setLayoutManager(new GridLayoutManager(MenuActivity.this, 4));
                 alacarteMenuRecyclerView.setAdapter(alacarteMenuAdapter);
 
                 //combinationMenuAdapter.notifyDataSetChanged();
                 //alacarteMenuAdapter.notifyDataSetChanged();
-
-
-
-
-            }
-        });
-
             }
 
             @Override
             public void onFailure(Call<CombinationAlacarteList> call, Throwable t) {
-                System.out.println("\n\n\n\n********************"+ t.getMessage() +"********************\n\n\n\n");
+                System.out.println("\n\n\n\n********************" + t.getMessage() + "********************\n\n\n\n");
 
             }
         });
 
     }
+
+
+
+
+
+
 
 
 
@@ -212,34 +170,33 @@ public class MenuActivity extends AppCompatActivity {
     }*/
 
 
-    //////////////////////////////////////////   Navigation(cont.)   //////////////////////////////////////
-    public void goToMain() {
-        Intent intent = new Intent(this, MainActivity.class);
+//////////////////////////////////////////   Navigation(cont.)   //////////////////////////////////////
+public void goToMain(){
+        Intent intent=new Intent(this,MainActivity.class);
         startActivity(intent);
-    }
+        }
 
     /*public void goToMenu(){
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }*/
 
-    public void goToSalesRecord() {
-        Intent intent = new Intent(this, SalesRecordActivity.class);
+public void goToSalesRecord(){
+        Intent intent=new Intent(this,SalesRecordActivity.class);
         startActivity(intent);
-    }
+        }
 
-    public void goToSettings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
+public void goToSettings(){
+        Intent intent=new Intent(this,SettingsActivity.class);
         startActivity(intent);
-    }
+        }
 
-    ////////////////////
+////////////////////
 
-    public void goToAddEdit() {
-        Intent intent = new Intent(this, AddEditMenuActivity.class);
+public void goToAddEdit(){
+        Intent intent=new Intent(this,AddEditMenuActivity.class);
         startActivity(intent);
-    }
+        }
 
 
-
-}
+        }

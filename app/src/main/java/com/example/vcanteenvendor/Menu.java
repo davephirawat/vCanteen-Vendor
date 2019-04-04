@@ -13,27 +13,13 @@ public class Menu {
     @SerializedName("foodId")
     private int foodId;
 
-    @SerializedName("foodImage")
-    private String foodImg;
-
-    @SerializedName("foodStatus")
-    private String foodStatus;
-
-    @SerializedName("foodType")
-    private String foodType;
 
 
 
 
     /////////////////////////////////////  GETTER SETTER CONSTRUCTOR  //////////////////////////////
 
-    public String getFoodImg() {
-        return foodImg;
-    }
 
-    public void setFoodImg(String foodImg) {
-        this.foodImg = foodImg;
-    }
 
     @SerializedName("foodImageUrl")
     private String foodImg;
@@ -43,6 +29,10 @@ public class Menu {
 
     @SerializedName("foodType")
     private String foodType;
+
+    public void setFoodImg(String foodImg) {
+        this.foodImg = foodImg;
+    }
 
 
 
@@ -82,21 +72,9 @@ public class Menu {
 
     }
 
-    public String getFoodStatus() {
-        return foodStatus;
-    }
 
-    public void setFoodStatus(String foodStatus) {
-        this.foodStatus = foodStatus;
-    }
 
-    public String getFoodType() {
-        return foodType;
-    }
 
-    public void setFoodType(String foodType) {
-        this.foodType = foodType;
-    }
 
     public String getFoodName() {
         return foodName;
