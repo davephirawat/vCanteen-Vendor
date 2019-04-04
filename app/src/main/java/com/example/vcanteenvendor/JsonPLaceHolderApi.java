@@ -38,8 +38,8 @@ interface JsonPlaceHolderApi {
     @POST("v1/user-authentication/vendor/check/token")
     Call<LoginResponse> sendLogin(@Body LoginVendor loginVendor);
 
-    @POST("v1/user-authentication/vendor/password/recover")
-    Call<String> recoverPass(@Body RecoverPass recoverPass);
+    @PUT("v1/user-authentication/vendor/password/recover")
+    Call<Void> recoverPass(@Body RecoverPass recoverPass);
 
     @FormUrlEncoded
     @PUT("v1/menu-management/vendorId/menu/foodId")

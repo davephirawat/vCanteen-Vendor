@@ -191,15 +191,14 @@ public class LoginActivity extends AppCompatActivity {
                                 RecoverPass postData = new RecoverPass(emailSent);
                                 System.out.println(postData.toString());
                                 System.out.println(URL);
-                                Call<String> call = jsonPlaceHolderApi.recoverPass(postData);
+                                Call<Void> call = jsonPlaceHolderApi.recoverPass(postData);
                                 System.out.println(jsonPlaceHolderApi.recoverPass(postData).toString());
                                 System.out.println(call.request().body().toString()
                                 );
-                                call.enqueue(new Callback<String>() {
+                                call.enqueue(new Callback<Void>() {
                                     @Override
-                                    public void onResponse(Call<String> call, Response<String> response) {
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
                                         System.out.println(response.code());
-                                        System.out.println(response.body());
                                         if (response.code() != 200) {
                                             // Error
                                             progressDialog.dismiss();
@@ -210,11 +209,12 @@ public class LoginActivity extends AppCompatActivity {
                                             Toast.makeText(getApplicationContext(), "A new Password has been sent to your Email.", Toast.LENGTH_SHORT).show();
                                             progressDialog.dismiss();
                                             confirmRecoverPass.dismiss();
+                                            recoverPassDialog.dismiss();
                                         }
                                     }
 
                                     @Override
-                                    public void onFailure(Call<String> call, Throwable t) {
+                                    public void onFailure(Call<Void> call, Throwable t) {
 
                                     }
                                 });
