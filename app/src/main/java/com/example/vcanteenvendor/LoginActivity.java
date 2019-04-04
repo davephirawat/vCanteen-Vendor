@@ -105,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 email = emailField.getText().toString();
                 passwd = passField.getText().toString();
+                passwd = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passField.getText().toString());
                 account_type = "NORMAL";
                 sendJSON(email, passwd);
             }
@@ -186,14 +187,19 @@ public class LoginActivity extends AppCompatActivity {
                                         .baseUrl(URL)
                                         .addConverterFactory(GsonConverterFactory.create(gson))
                                         .build();
-                                final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+                                JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
                                 RecoverPass postData = new RecoverPass(emailSent);
                                 System.out.println(postData.toString());
-                                Call<Void> call = jsonPlaceHolderApi.recoverPass(postData);
-                                call.enqueue(new Callback<Void>() {
+                                System.out.println(URL);
+                                Call<String> call = jsonPlaceHolderApi.recoverPass(postData);
+                                System.out.println(jsonPlaceHolderApi.recoverPass(postData).toString());
+                                System.out.println(call.request().body().toString()
+                                );
+                                call.enqueue(new Callback<String>() {
                                     @Override
-                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                    public void onResponse(Call<String> call, Response<String> response) {
                                         System.out.println(response.code());
+                                        System.out.println(response.body());
                                         if (response.code() != 200) {
                                             // Error
                                             progressDialog.dismiss();
@@ -208,7 +214,7 @@ public class LoginActivity extends AppCompatActivity {
                                     }
 
                                     @Override
-                                    public void onFailure(Call<Void> call, Throwable t) {
+                                    public void onFailure(Call<String> call, Throwable t) {
 
                                     }
                                 });

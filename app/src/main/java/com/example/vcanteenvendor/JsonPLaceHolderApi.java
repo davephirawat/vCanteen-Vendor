@@ -39,7 +39,7 @@ interface JsonPlaceHolderApi {
     Call<LoginResponse> sendLogin(@Body LoginVendor loginVendor);
 
     @POST("v1/user-authentication/vendor/password/recover")
-    Call<Void> recoverPass(@Body RecoverPass recoverPass);
+    Call<String> recoverPass(@Body RecoverPass recoverPass);
 
     @FormUrlEncoded
     @PUT("v1/menu-management/vendorId/menu/foodId")
@@ -77,5 +77,5 @@ interface JsonPlaceHolderApi {
     Call<Void> resetPass(@Body ChangePass changePass);
 
     @POST("v1/user-authentication/vendor/verify/token")
-    Call<Void> verifyToken(@Body Token token);
+    Call<TokenVerification> verifyToken(@Body Token token);
 }

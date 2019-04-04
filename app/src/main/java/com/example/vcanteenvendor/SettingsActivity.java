@@ -410,7 +410,8 @@ public class SettingsActivity extends AppCompatActivity {
                                     .build();
                             final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-                            ChangePass postData = new ChangePass(newPass, email);
+                            String hashedNewPass = org.apache.commons.codec.digest.DigestUtils.sha256Hex(newPass);
+                            ChangePass postData = new ChangePass(hashedNewPass, email);
                             System.out.println(postData.toString());
                             Call<Void> call = jsonPlaceHolderApi.resetPass(postData);
 

@@ -14,4 +14,5 @@
     <string name="bold_email"><b>Email</b></string>
     <string name="text_confirm_recover"><b>Do you wish to \n send a temporary password your email?</b></string>
     <string name="emptyr_recover"><b>"Please fill in an Email "</b></string>
+    <string name="for_vendor"><b>FOR VENDOR/SHOP</b></string>
 </resources>

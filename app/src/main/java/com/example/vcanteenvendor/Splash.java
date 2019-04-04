@@ -34,19 +34,20 @@ public class Splash extends AppCompatActivity {
         final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
         Token token = new Token(sharedPref.getString("email", "empty email"), sharedPref.getString("token", "empty token"));
-        Call<Void> call = jsonPlaceHolderApi.verifyToken(token);
+        Call<TokenVerification> call = jsonPlaceHolderApi.verifyToken(token);
 
         // POST DATA FOR TOKEN VERIFICATION
-        call.enqueue(new Callback<Void>() {
+        call.enqueue(new Callback<TokenVerification>() {
             @Override
-            public void onResponse(Call<Void> call, final Response<Void> response) {
+            public void onResponse(Call<TokenVerification> call, final Response<TokenVerification> response) {
                 if(!response.isSuccessful())
                     Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         // yourMethod();
-                        if(response.code()!= 200)
+                        boolean isExpired = response.body().isExpired();
+                        if(isExpired)
                             startActivity(new Intent(Splash.this, LoginActivity.class));
                         else
                             startActivity(new Intent(Splash.this, MainActivity.class));
@@ -56,7 +57,7 @@ public class Splash extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(Call<TokenVerification> call, Throwable t) {
 
             }
         });
