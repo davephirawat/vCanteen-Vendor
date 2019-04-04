@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
@@ -28,6 +29,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.login.LoginManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +39,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +49,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private static final Pattern PASSWORD_PATTERN =
+            Pattern.compile("^[a-zA-Z0-9@!#$%^&+-=](?=\\S+$).{7,}$");
 
     Button orderStatusButton; //ORDER STATUS
     Button menuButton; //MENU
@@ -71,21 +78,29 @@ public class SettingsActivity extends AppCompatActivity {
     Dialog changePassDialog;
 
     /// FOR CHANGEPASS DIALOG ///
-    EditText currPassBox;
-    EditText newPassBox;
-    EditText confirmNewPassBox;
-    Button confirmChangePass;
+    private EditText currPassBox;
+    private EditText newPassBox;
+    private EditText confirmNewPassBox;
+    private Button confirmChangePass;
 
-    Button clearCurrPass;
-    Button clearNewPass;
-    Button clearConfirmPass;
+    private Button clearCurrPass;
+    private Button clearNewPass;
+    private Button clearConfirmPass;
 
-    TextView errorCurrPass;
-    TextView errorNewPass;
-    TextView errorConfirmPass;
+    private TextView errorCurrPass;
+    private TextView errorNewPass;
+    private TextView errorConfirmPass;
+
+    private Button closeDialog;
+    private SharedPreferences sharedPref;
+
 
     private RequestQueue mQueue;
     private String url="FROM ENDPOINTS";
+
+    String email;
+
+    Dialog dialog;
 
     Vendor vendor;
     VendorInfoArray vendorInfoArray;
@@ -109,7 +124,6 @@ public class SettingsActivity extends AppCompatActivity {
         signOutButton=(Button) findViewById(R.id.signOutButton);
         vendorStatusToggle = (Switch) findViewById(R.id.vendorStatusToggle);
         statusText = (TextView) findViewById(R.id.statusText);
-        changePasswordButton = (Button) findViewById(R.id.changePasswordButton);
 
         vendorNameInput = (EditText) findViewById(R.id.vendorNameInput);
         vendorEmailInput = (EditText) findViewById(R.id.vendorEmailInput);
@@ -330,12 +344,131 @@ public class SettingsActivity extends AppCompatActivity {
                 errorNewPass = changePassDialog.findViewById(R.id.errorNewPass);
                 errorConfirmPass = changePassDialog.findViewById(R.id.errorConfirmPass);
 
+                closeDialog = changePassDialog.findViewById(R.id.close_dialog);
+
                 confirmChangePass.setEnabled(true);
                 clearCurrPass.setEnabled(true);
                 clearNewPass.setEnabled(true);
                 clearConfirmPass.setEnabled(true);
 
+                changePassDialog.show();
 
+                confirmChangePass.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        progressDialog = new ProgressDialog(SettingsActivity.this);
+                        progressDialog = ProgressDialog.show(SettingsActivity.this
+                                , "",
+                                "Loading. Please wait...", true);
+
+                        String currPass = currPassBox.getText().toString();
+                        String newPass = newPassBox.getText().toString();
+                        String confirmPass = confirmNewPassBox.getText().toString();
+
+                        if (currPass.equals(newPass)) {
+                            errorCurrPass.setText("Your new password can't be the same as your current passaword.");
+                            errorCurrPass.setVisibility(View.VISIBLE);
+                            currPassBox.setText("");
+                            newPassBox.setText("");
+                            confirmNewPassBox.setText("");
+                            progressDialog.dismiss();
+
+                        } else if (!(newPass.equals(confirmPass))) {
+                            errorConfirmPass.setText("Password doesn't match. Please try again.");
+                            errorConfirmPass.setVisibility(View.VISIBLE);
+                            //currentPassword.setText("");
+                            newPassBox.setText("");
+                            confirmNewPassBox.setText("");
+                            progressDialog.dismiss();
+
+                        } else if (newPass.length() < 8 || newPass.length() > 20) {
+                            errorNewPass.setText("Invalid Password. Please try again.");
+                            errorNewPass.setVisibility(View.VISIBLE);
+                            //currentPassword.setText("");
+                            newPassBox.setText("");
+                            confirmNewPassBox.setText("");
+                            progressDialog.dismiss();
+                        } else if (!PASSWORD_PATTERN.matcher(newPass).matches()) {
+                            errorNewPass.setText("Invalid Password. Please try again.");
+                            errorNewPass.setVisibility(View.VISIBLE);
+                            //currentPassword.setText("");
+                            newPassBox.setText("");
+                            confirmNewPassBox.setText("");
+                            progressDialog.dismiss();
+                        } else {
+                            errorNewPass.setVisibility(View.GONE);
+                            errorConfirmPass.setVisibility(View.GONE);
+                            errorCurrPass.setVisibility(View.GONE);
+
+                            url="https://vcanteen.herokuapp.com/";
+
+                            Gson gson = new GsonBuilder().serializeNulls().create();
+                            Retrofit retrofit = new Retrofit.Builder()
+                                    .baseUrl(url)
+                                    .addConverterFactory(GsonConverterFactory.create(gson))
+                                    .build();
+                            final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
+                            ChangePass postData = new ChangePass(newPass, email);
+                            System.out.println(postData.toString());
+                            Call<Void> call = jsonPlaceHolderApi.resetPass(postData);
+
+                            call.enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    if (response.code() != 200) {
+                                        // ERROR
+                                        errorConfirmPass.setText("Current password is incorrect. Please try again.");
+                                        errorConfirmPass.setVisibility(View.VISIBLE);
+                                        confirmNewPassBox.setText("");
+                                        currPassBox.setText("");
+                                        newPassBox.setText("");
+                                        progressDialog.dismiss();
+                                    } else {
+                                        // SUCCESS
+                                        Toast.makeText(getApplicationContext(), "Password successfully changed.", Toast.LENGTH_SHORT).show();
+                                        progressDialog.dismiss();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+
+                                }
+                            });
+                        }
+
+                    }
+                });
+
+                clearCurrPass.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        currPassBox.setText("");
+                    }
+                });
+
+                clearNewPass.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        newPassBox.setText("");
+                    }
+                });
+
+                clearConfirmPass.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        confirmNewPassBox.setText("");
+                    }
+                });
+
+                closeDialog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        changePassDialog.dismiss();
+                    }
+                });
             }
         });
 
@@ -392,7 +525,12 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<VendorInfoArray> call = jsonPlaceHolderApi.getVendorInfo(1);
+
+        sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
+        String token = sharedPref.getString("token", "empty token");
+        int vendor_id =  sharedPref.getInt("vendor_id", 0);
+        System.out.println(vendor_id);
+        Call<VendorInfoArray> call = jsonPlaceHolderApi.getVendorInfo(vendor_id);
 
         progressDialog.dismiss();
 
@@ -413,6 +551,8 @@ public class SettingsActivity extends AppCompatActivity {
 
                     vendor = vendorInfoArray.vendorInfo.get(0);
                     vendorNameInput.setText(vendor.getVendorName());
+                    email = vendor.getVendorEmail();
+                    System.out.println(email);
                     vendorEmailInput.setText(vendor.getVendorEmail());
                     Glide.with(SettingsActivity.this).load(vendor.getVendorImage()).apply(option).into(vendorProfilePicture);
                     //This array always have 1 member, so use get(1).
@@ -463,21 +603,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        changePasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(SettingsActivity.this);
-                //dialog.setTitle("Devahoy");
-                dialog.setContentView(R.layout.change_password_dialog);
-                dialog.show();
-
-                Button close_dialog = (Button) dialog.findViewById(R.id.close_dialog);
-                TextView changePasswordTitle = (TextView)dialog.findViewById(R.id.changePasswordTitle);
-                TextView currentPassword = (TextView)dialog.findViewById(R.id.currentPassword);
-
-
-            }
-        });
 
     }
 
@@ -552,8 +677,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void logOut(){
-       Intent intent = new Intent(this, LoginActivity.class);
-       startActivity(intent);
+        LoginManager.getInstance().logOut();
+        sharedPref.edit().putString("token", "NO TOKEN JA EDOK").commit();
+        sharedPref.edit().putInt("vendor_id", 0).commit();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
    }
 
 }

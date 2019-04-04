@@ -10,8 +10,8 @@ public class LoginResponse {
     @SerializedName("vendorToken")
     private String token;
 
-    @SerializedName("vendorId")
-    private String vendor_id;
+    @SerializedName("vendor_id")
+    private int vendor_id;
 
     public String getStatus() {
         return status;
@@ -21,7 +21,7 @@ public class LoginResponse {
         return token;
     }
 
-    public String getVendor_id() {
+    public int getVendor_id() {
         return vendor_id;
     }
 }

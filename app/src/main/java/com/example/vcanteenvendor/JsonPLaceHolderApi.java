@@ -72,4 +72,10 @@ interface JsonPlaceHolderApi {
     @PUT("v1/vendor-main/order/status")
     Call<Void> editOrderStatus(@Field("orderId") int orderId,
                                 @Field("orderStatus") String orderStatus);
+
+    @PUT("v1/user-authentication/vendor/password/change")
+    Call<Void> resetPass(@Body ChangePass changePass);
+
+    @POST("v1/user-authentication/vendor/verify/token")
+    Call<Void> verifyToken(@Body Token token);
 }
