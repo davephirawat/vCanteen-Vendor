@@ -3,6 +3,7 @@ package com.example.vcanteenvendor;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -48,9 +49,7 @@ public class MainActivity extends AppCompatActivity {
     List<Order> orderList;
 
 
-
-
-
+    SharedPreferences sharedPref;
 
 
     @Override
@@ -114,6 +113,12 @@ public class MainActivity extends AppCompatActivity {
         List = new OrderList(orderList);
 
         orderLoadUp(); //GET DATA FROM JSON
+
+        sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
+
+
+        System.out.println(sharedPref.getString("token", "empty token"));
+        System.out.println(sharedPref.getString("vendorID", "no vendor ID"));
 
 
 
