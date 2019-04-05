@@ -1,5 +1,6 @@
 package com.example.vcanteenvendor;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,13 +35,16 @@ public class MenuActivity extends AppCompatActivity {
     RecyclerView combinationMenuRecyclerView;
     RecyclerView alacarteMenuRecyclerView;
 
+
     MenuRecyclerviewAdapter combinationMenuAdapter;
     MenuRecyclerviewAdapter alacarteMenuAdapter;
-    
+
     //List<Menu> lstMenu;
     CombinationAlacarteList combinationAlacarteList;
 
     RequestOptions option = new RequestOptions().centerCrop();
+
+    ProgressDialog progressDialog;
 
 
     @Override
@@ -48,15 +52,14 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        orderStatusButton= (Button) findViewById(R.id.orderStatusButton);
-        menuButton= (Button) findViewById(R.id.menuButton);
-        salesRecordButton= (Button) findViewById(R.id.salesRecordButton);
-        settingsButton= (Button) findViewById(R.id.settingsButton);
+        orderStatusButton = (Button) findViewById(R.id.orderStatusButton);
+        menuButton = (Button) findViewById(R.id.menuButton);
+        salesRecordButton = (Button) findViewById(R.id.salesRecordButton);
+        settingsButton = (Button) findViewById(R.id.settingsButton);
         addMenuButton = (Button) findViewById(R.id.addMenuButton);
 
         combinationMenuRecyclerView = (RecyclerView) findViewById(R.id.combinationMenuRecyclerView);
         alacarteMenuRecyclerView = (RecyclerView) findViewById(R.id.alacarteMenuRecyclerView);
-
 
 
         //////////////////////////////////////////   Navigation   //////////////////////////////////////
@@ -105,10 +108,13 @@ public class MenuActivity extends AppCompatActivity {
 
 
 
+    private void menuLoadUp() {
 
-    public void menuLoadUp() {
+        progressDialog = new ProgressDialog(MenuActivity.this);
+        progressDialog = ProgressDialog.show(MenuActivity.this, "",
+                "Loading. Please wait...", true);
 
-        String url="https://vcanteen.herokuapp.com/";
+        String url = "https://vcanteen.herokuapp.com/";
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -126,33 +132,40 @@ public class MenuActivity extends AppCompatActivity {
             public void onResponse(Call<CombinationAlacarteList> call, Response<CombinationAlacarteList> response) {
 
                 if (!response.isSuccessful()) {
-                    System.out.println("\n\n\n\n********************"+ "Code: " + response.code() +"********************\n\n\n\n");
+                    System.out.println("\n\n\n\n********************" + "Code: " + response.code() + "********************\n\n\n\n");
                     return;
                 }
 
                 combinationAlacarteList = response.body();
 
-                combinationMenuAdapter = new MenuRecyclerviewAdapter(MenuActivity.this,combinationAlacarteList.combinationList);
-                combinationMenuRecyclerView.setLayoutManager(new GridLayoutManager(MenuActivity.this,4));
+                combinationMenuAdapter = new MenuRecyclerviewAdapter(MenuActivity.this, combinationAlacarteList.combinationList);
+                combinationMenuRecyclerView.setLayoutManager(new GridLayoutManager(MenuActivity.this, 4));
                 combinationMenuRecyclerView.setAdapter(combinationMenuAdapter);
 
-                alacarteMenuAdapter = new MenuRecyclerviewAdapter(MenuActivity.this,combinationAlacarteList.alacarteList);
-                alacarteMenuRecyclerView.setLayoutManager(new GridLayoutManager(MenuActivity.this,4));
+                alacarteMenuAdapter = new MenuRecyclerviewAdapter(MenuActivity.this, combinationAlacarteList.alacarteList);
+                alacarteMenuRecyclerView.setLayoutManager(new GridLayoutManager(MenuActivity.this, 4));
                 alacarteMenuRecyclerView.setAdapter(alacarteMenuAdapter);
+
+                progressDialog.dismiss();
 
                 //combinationMenuAdapter.notifyDataSetChanged();
                 //alacarteMenuAdapter.notifyDataSetChanged();
-
             }
 
             @Override
             public void onFailure(Call<CombinationAlacarteList> call, Throwable t) {
-                System.out.println("\n\n\n\n********************"+ t.getMessage() +"********************\n\n\n\n");
+                System.out.println("\n\n\n\n********************" + t.getMessage() + "********************\n\n\n\n");
 
             }
         });
 
     }
+
+
+
+
+
+
 
 
 
@@ -166,34 +179,33 @@ public class MenuActivity extends AppCompatActivity {
     }*/
 
 
-    //////////////////////////////////////////   Navigation(cont.)   //////////////////////////////////////
-    public void goToMain() {
-        Intent intent = new Intent(this, MainActivity.class);
+//////////////////////////////////////////   Navigation(cont.)   //////////////////////////////////////
+public void goToMain(){
+        Intent intent=new Intent(this,MainActivity.class);
         startActivity(intent);
-    }
+        }
 
     /*public void goToMenu(){
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }*/
 
-    public void goToSalesRecord() {
-        Intent intent = new Intent(this, SalesRecordActivity.class);
+public void goToSalesRecord(){
+        Intent intent=new Intent(this,SalesRecordActivity.class);
         startActivity(intent);
-    }
+        }
 
-    public void goToSettings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
+public void goToSettings(){
+        Intent intent=new Intent(this,SettingsActivity.class);
         startActivity(intent);
-    }
+        }
 
-    ////////////////////
+////////////////////
 
-    public void goToAddEdit() {
-        Intent intent = new Intent(this, AddEditMenuActivity.class);
+public void goToAddEdit(){
+        Intent intent=new Intent(this,AddEditMenuActivity.class);
         startActivity(intent);
-    }
+        }
 
 
-
-}
+        }

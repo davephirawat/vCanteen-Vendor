@@ -1,6 +1,7 @@
 package com.example.vcanteenvendor;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -36,6 +37,8 @@ public class OrderAdapter extends ArrayAdapter {
     Button cancelButton;
     Button doneButton;
     Order singleOrder;
+    ProgressDialog progressDialog;
+
 
 
 
@@ -43,6 +46,7 @@ public class OrderAdapter extends ArrayAdapter {
         super(context, R.layout.order_row_relative , List.orderList);
         mOrderList=List;
         mOrderArrayList = List.orderList;
+
     }
 
     /*OrderAdapter(Context context, String[] orderList){
@@ -51,6 +55,7 @@ public class OrderAdapter extends ArrayAdapter {
     }*/
 
     @Override
+
     public View getView(final int position, View convertView, ViewGroup parent){
 
         LayoutInflater orderInflater = LayoutInflater.from(getContext());
@@ -139,6 +144,9 @@ public class OrderAdapter extends ArrayAdapter {
 
                         //orderCancel();
                         //another put
+                        mOrderArrayList.remove(position);
+                        OrderAdapter.super.notifyDataSetChanged();
+
 
                         dialog.dismiss();
 
@@ -150,12 +158,15 @@ public class OrderAdapter extends ArrayAdapter {
             }
         });
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mOrderArrayList.remove(position);
                 OrderAdapter.super.notifyDataSetChanged();
+
 
 
                 //orderDone();

@@ -52,7 +52,7 @@ public class MenuAlacarteRecyclerviewAdapter extends RecyclerView.Adapter<MenuAl
                 i.putExtra("foodId",mData.get(viewHolder.getAdapterPosition()).getFoodId());
                 i.putExtra("foodName",mData.get(viewHolder.getAdapterPosition()).getFoodName());
                 i.putExtra("price",mData.get(viewHolder.getAdapterPosition()).getFoodPrice());
-                i.putExtra("foodImage",mData.get(viewHolder.getAdapterPosition()).getFoodImg());
+                i.putExtra("foodImageUrl",mData.get(viewHolder.getAdapterPosition()).getFoodImg());
                 i.putExtra("foodStatus",mData.get(viewHolder.getAdapterPosition()).getFoodStatus());
                 i.putExtra("foodType",mData.get(viewHolder.getAdapterPosition()).getFoodType());
                 // start the activity
@@ -66,6 +66,8 @@ public class MenuAlacarteRecyclerviewAdapter extends RecyclerView.Adapter<MenuAl
 
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
 
@@ -73,7 +75,7 @@ public class MenuAlacarteRecyclerviewAdapter extends RecyclerView.Adapter<MenuAl
         //holder.card_food_price.setText(mData.get(position).getFoodPrice());
         holder.card_food_price.setText(String.format ("%d", mData.get(position).getFoodPrice()));
 
-        if (!mData.get(position).getFoodImg().equals(""))
+        //if (!mData.get(position).getFoodImg().equals(""))
         Glide.with(mContext).load(mData.get(position).getFoodImg()).apply(option).into(holder.menuImg); //Set image via url using Glide
 
         if(mData.get(position).getFoodStatus().equals("SOLD_OUT")){
@@ -101,6 +103,7 @@ public class MenuAlacarteRecyclerviewAdapter extends RecyclerView.Adapter<MenuAl
         CardView cardView ;
         TextView soldOutLabel;
         ImageView filter;
+
 
 
         public MyViewHolder(View itemView) {

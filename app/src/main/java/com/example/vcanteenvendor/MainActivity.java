@@ -1,6 +1,7 @@
 package com.example.vcanteenvendor;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     OrderList List;
     List<Order> orderList;
-
+    private ProgressDialog progressDialog;
 
     SharedPreferences sharedPref;
 
@@ -110,23 +111,25 @@ public class MainActivity extends AppCompatActivity {
 
         //////////////////////////////////////////   Order Adapter   //////////////////////////////////////
 
+
         List = new OrderList(orderList);
+
+
 
         orderLoadUp(); //GET DATA FROM JSON
 
-        sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
-
-
-        System.out.println(sharedPref.getString("token", "empty token"));
-        System.out.println(sharedPref.getString("vendorID", "no vendor ID"));
-
-
+        /*ListAdapter testAdapter = new OrderAdapter(this, List); //Put the arraylist here
+        orderListListView.setAdapter(testAdapter);*/
 
 
 
     }
 
     private void orderLoadUp() {
+
+        progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog = ProgressDialog.show(MainActivity.this, "",
+                "Loading. Please wait...", true);
 
         String url="https://vcanteen.herokuapp.com/";
 
@@ -149,13 +152,10 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("\n\n\n\n********************"+ "Code: " + response.code() +"********************\n\n\n\n");
                     return;
                 }
-
                 List = response.body();
                 ListAdapter testAdapter = new OrderAdapter(MainActivity.this, List); //Put the arraylist here
                 orderListListView.setAdapter(testAdapter);
-
-
-
+                progressDialog.dismiss();
             }
 
             @Override

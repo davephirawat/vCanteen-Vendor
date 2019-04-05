@@ -24,6 +24,23 @@ interface JsonPlaceHolderApi {
     @GET("v1/menu-management/{vendorId}/menu")
     Call<CombinationAlacarteList> getAllMenu(@Path("vendorId") int vendorId);
 
+
+    /*@FormUrlEncoded
+    @POST("b/5c9c37331c56bb1ec38f9c67/2")
+    Call<Vendor> getVendor(
+            @Field("vendorID") int vendorId
+    );*/
+
+
+    @PUT("b/5c9c37331c56bb1ec38f9c67/2")
+    Call<Vendor> getVendor2(@Query("vendorID") int vendorId, @Body Vendor vendor);
+
+    @POST("v1/user-authentication/vendor/check/token")
+    Call<LoginResponse> sendLogin(@Body LoginVendor loginVendor);
+
+    @PUT("v1/user-authentication/vendor/password/recover")
+    Call<Void> recoverPass(@Body RecoverPass recoverPass);
+
     @FormUrlEncoded
     @PUT("v1/menu-management/vendorId/menu/foodId")
     Call<Void> editMenu(@Field("vendorId") int vendorId, @Field("foodId") int foodId,
@@ -55,4 +72,10 @@ interface JsonPlaceHolderApi {
     @PUT("v1/vendor-main/order/status")
     Call<Void> editOrderStatus(@Field("orderId") int orderId,
                                 @Field("orderStatus") String orderStatus);
+
+    @PUT("v1/user-authentication/vendor/password/change")
+    Call<Void> resetPass(@Body ChangePass changePass);
+
+    @POST("v1/user-authentication/vendor/verify/token")
+    Call<TokenVerification> verifyToken(@Body Token token);
 }
