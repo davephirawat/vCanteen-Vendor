@@ -3,6 +3,7 @@ package com.example.vcanteenvendor;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -64,6 +65,8 @@ public class SalesRecordActivity extends AppCompatActivity {
     TextView best_seller_dish;
     TextView number_sold;
     int resource;
+    private SharedPreferences sharedPref;
+    int vendor_id;
 
 
     ListView salesRecordListListView;
@@ -98,6 +101,9 @@ public class SalesRecordActivity extends AppCompatActivity {
         number_sold = (TextView) findViewById(R.id.number_sold);
 
 
+
+        sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
+        vendor_id =  sharedPref.getInt("vendor_id", 0);
 
 
 

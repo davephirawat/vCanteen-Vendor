@@ -92,6 +92,9 @@ public class OrderAdapter extends ArrayAdapter {
                 positiveButton.setText("CONFIRM");
                 //negativeButton.setVisibility(View.GONE);
 
+               
+
+
 
 
                 dialogCheckbox.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +145,7 @@ public class OrderAdapter extends ArrayAdapter {
                     @Override
                     public void onClick(View v) {
 
-                        //orderCancel();
+                        orderCancel();
                         //another put
                         mOrderArrayList.remove(position);
                         OrderAdapter.super.notifyDataSetChanged();
@@ -167,9 +170,7 @@ public class OrderAdapter extends ArrayAdapter {
                 mOrderArrayList.remove(position);
                 OrderAdapter.super.notifyDataSetChanged();
 
-
-
-                //orderDone();
+                orderDone();
                 //sent put here
             }
         });
@@ -178,7 +179,7 @@ public class OrderAdapter extends ArrayAdapter {
 
 
 
-        foodname.setText(singleOrder.getOrderName());
+        foodname.setText(singleOrder.getOrderId());
         foodextra.setText(singleOrder.getOrderNameExtra());
         return customView;
     }
@@ -197,7 +198,7 @@ public class OrderAdapter extends ArrayAdapter {
 
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(1, "CANCELLED");
+        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(singleOrder.getOrderId(), "CANCELLED");
 
         call.enqueue(new Callback<Void>() {
             @Override
@@ -235,7 +236,7 @@ public class OrderAdapter extends ArrayAdapter {
 
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(1, "DONE");
+        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(singleOrder.getOrderId(), "DONE");
 
         call.enqueue(new Callback<Void>() {
             @Override

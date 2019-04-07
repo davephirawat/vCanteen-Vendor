@@ -203,8 +203,8 @@
                 android:layout_below="@+id/vendorProfile"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="32dp"
-                android:background="@drawable/button_white_rounded"
-                app:srcCompat="@drawable/img_loading" />
+                android:background="@drawable/img_loading"
+                 />
 
             <EditText
                 android:id="@+id/vendorNameInput"
@@ -385,7 +385,8 @@
                     android:fontFamily="@font/sfprotext_regular"
                     android:text="@string/unlink"
                     android:textColor="@color/pinkPrimary"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:visibility="invisible"/>
 
             </RelativeLayout>
 
@@ -432,7 +433,8 @@
                     android:fontFamily="@font/sfprotext_regular"
                     android:text="@string/unlink"
                     android:textColor="@color/pinkPrimary"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:visibility="invisible"/>
 
             </RelativeLayout>
 
@@ -480,7 +482,8 @@
                     android:fontFamily="@font/sfprotext_regular"
                     android:text="@string/unlink"
                     android:textColor="@color/pinkPrimary"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:visibility="invisible"/>
 
             </RelativeLayout>
 
@@ -528,7 +531,8 @@
                     android:fontFamily="@font/sfprotext_semibold"
                     android:text="LINK"
                     android:textColor="@color/pinkPrimary"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:visibility="invisible"/>
 
             </RelativeLayout>
 

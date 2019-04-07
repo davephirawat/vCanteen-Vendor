@@ -33,6 +33,8 @@ import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -108,6 +110,7 @@ public class SettingsActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
 
     RequestOptions option = new RequestOptions().centerCrop();
+    int vendor_id;
 
 
     @Override
@@ -137,44 +140,20 @@ public class SettingsActivity extends AppCompatActivity {
 
         vendorProfilePicture = findViewById(R.id.vendorProfilePicture);
 
-
-        //////////////////////////////////////////   JSON START UP   //////////////////////////////////////
-
-
-
-        //mQueue = Volley.newRequestQueue(this);
-
-
-
-        accountJSONLoadUp();
-
-
-
-
-        vendorNameInput = (EditText) findViewById(R.id.vendorNameInput);
-        vendorEmailInput = (EditText) findViewById(R.id.vendorEmailInput);
-
-        vendorProfile = (TextView) findViewById(R.id.vendorProfile);
-
-        checkCUNex = (TextView) findViewById(R.id.checkCUNex);
-        checkScb = (TextView) findViewById(R.id.checkScb);
-        checkKplus = (TextView) findViewById(R.id.checkKplus);
-        checkTrueMoney = (TextView) findViewById(R.id.checkTrueMoney);
-
-        vendorProfilePicture = findViewById(R.id.vendorProfilePicture);
-
-
         changePass = findViewById(R.id.changePasswordButton);
 
         //////////////////////////////////////////   JSON START UP   //////////////////////////////////////
 
-
-
-        //mQueue = Volley.newRequestQueue(this);
-
+        //Glide.with(SettingsActivity.this).load(getDrawable(R.drawable.img_loading)).apply(option).into(vendorProfilePicture);
 
 
         accountJSONLoadUp();
+
+
+
+
+        sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
+        vendor_id =  sharedPref.getInt("vendor_id", 0);
 
 
 
@@ -410,7 +389,7 @@ public class SettingsActivity extends AppCompatActivity {
                                     .build();
                             final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-                            String hashedNewPass = org.apache.commons.codec.digest.DigestUtils.sha256Hex(newPass);
+                            String hashedNewPass = new String(Hex.encodeHex(DigestUtils.sha256(newPass)));
                             ChangePass postData = new ChangePass(hashedNewPass, email);
                             System.out.println(postData.toString());
                             Call<Void> call = jsonPlaceHolderApi.resetPass(postData);
@@ -486,7 +465,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<Void> call = jsonPlaceHolderApi.editVendorStatus(1, vendorStatus);
+        Call<Void> call = jsonPlaceHolderApi.editVendorStatus(vendor_id, vendorStatus);
 
         call.enqueue(new Callback<Void>() {
             @Override
@@ -555,6 +534,8 @@ public class SettingsActivity extends AppCompatActivity {
                     email = vendor.getVendorEmail();
                     System.out.println(email);
                     vendorEmailInput.setText(vendor.getVendorEmail());
+
+                    if (vendor.getVendorImage()!=null)
                     Glide.with(SettingsActivity.this).load(vendor.getVendorImage()).apply(option).into(vendorProfilePicture);
                     //This array always have 1 member, so use get(1).
 

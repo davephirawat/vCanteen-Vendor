@@ -32,6 +32,8 @@ import com.facebook.login.LoginResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -105,7 +107,10 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 email = emailField.getText().toString();
                 passwd = passField.getText().toString();
-                passwd = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passField.getText().toString());
+                System.out.println(passwd);
+//                passwd = DigestUtils.sha256Hex(passwd);
+                passwd = new String(Hex.encodeHex(DigestUtils.sha256(passwd)));
+                System.out.println(passwd);
                 account_type = "NORMAL";
                 sendJSON(email, passwd);
             }

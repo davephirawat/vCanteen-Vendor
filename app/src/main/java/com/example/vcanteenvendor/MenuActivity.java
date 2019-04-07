@@ -2,6 +2,7 @@ package com.example.vcanteenvendor;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import com.bumptech.glide.request.RequestOptions;
 
@@ -45,6 +47,10 @@ public class MenuActivity extends AppCompatActivity {
     RequestOptions option = new RequestOptions().centerCrop();
 
     ProgressDialog progressDialog;
+
+    SharedPreferences sharedPref;
+
+    int vendor_id;
 
 
     @Override
@@ -102,6 +108,9 @@ public class MenuActivity extends AppCompatActivity {
 
         menuLoadUp();
 
+        sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
+        vendor_id =  sharedPref.getInt("vendor_id", 0);
+
 
     }
 
@@ -124,7 +133,7 @@ public class MenuActivity extends AppCompatActivity {
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        Call<CombinationAlacarteList> call = jsonPlaceHolderApi.getAllMenu(1); //SET LOGIC TO INSERT ID HERE
+        Call<CombinationAlacarteList> call = jsonPlaceHolderApi.getAllMenu(vendor_id); //SET LOGIC TO INSERT ID HERE
 
 
         call.enqueue(new Callback<CombinationAlacarteList>() {
@@ -133,6 +142,8 @@ public class MenuActivity extends AppCompatActivity {
 
                 if (!response.isSuccessful()) {
                     System.out.println("\n\n\n\n********************" + "Code: " + response.code() + "********************\n\n\n\n");
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "You have 0 menu.",  Toast.LENGTH_SHORT).show();
                     return;
                 }
 
