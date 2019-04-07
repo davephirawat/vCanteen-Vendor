@@ -1,6 +1,7 @@
 package com.example.vcanteenvendor;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -36,6 +37,8 @@ public class OrderAdapter extends ArrayAdapter {
     Button cancelButton;
     Button doneButton;
     Order singleOrder;
+    ProgressDialog progressDialog;
+
 
 
 
@@ -43,6 +46,7 @@ public class OrderAdapter extends ArrayAdapter {
         super(context, R.layout.order_row_relative , List.orderList);
         mOrderList=List;
         mOrderArrayList = List.orderList;
+
     }
 
     /*OrderAdapter(Context context, String[] orderList){
@@ -51,6 +55,7 @@ public class OrderAdapter extends ArrayAdapter {
     }*/
 
     @Override
+
     public View getView(final int position, View convertView, ViewGroup parent){
 
         LayoutInflater orderInflater = LayoutInflater.from(getContext());
@@ -86,6 +91,9 @@ public class OrderAdapter extends ArrayAdapter {
 
                 positiveButton.setText("CONFIRM");
                 //negativeButton.setVisibility(View.GONE);
+
+               
+
 
 
 
@@ -137,8 +145,11 @@ public class OrderAdapter extends ArrayAdapter {
                     @Override
                     public void onClick(View v) {
 
-                        //orderCancel();
+                        orderCancel();
                         //another put
+                        mOrderArrayList.remove(position);
+                        OrderAdapter.super.notifyDataSetChanged();
+
 
                         dialog.dismiss();
 
@@ -150,6 +161,8 @@ public class OrderAdapter extends ArrayAdapter {
             }
         });
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,8 +170,7 @@ public class OrderAdapter extends ArrayAdapter {
                 mOrderArrayList.remove(position);
                 OrderAdapter.super.notifyDataSetChanged();
 
-
-                //orderDone();
+                orderDone();
                 //sent put here
             }
         });
@@ -167,7 +179,7 @@ public class OrderAdapter extends ArrayAdapter {
 
 
 
-        foodname.setText(singleOrder.getOrderName());
+        foodname.setText(singleOrder.getOrderId());
         foodextra.setText(singleOrder.getOrderNameExtra());
         return customView;
     }
@@ -186,7 +198,7 @@ public class OrderAdapter extends ArrayAdapter {
 
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(1, "CANCELLED");
+        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(singleOrder.getOrderId(), "CANCELLED");
 
         call.enqueue(new Callback<Void>() {
             @Override
@@ -224,7 +236,7 @@ public class OrderAdapter extends ArrayAdapter {
 
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(1, "DONE");
+        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(singleOrder.getOrderId(), "DONE");
 
         call.enqueue(new Callback<Void>() {
             @Override

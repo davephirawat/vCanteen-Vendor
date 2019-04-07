@@ -9,34 +9,49 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class SalesRecordAdapter extends ArrayAdapter<SalesRecordArrayList> {
+import retrofit2.Callback;
 
+public class SalesRecordAdapter extends ArrayAdapter<SalesRecordOrder> {
+    Context context;
+    int resource;
+    ArrayList<SalesRecordOrder> salesRecordOrder = null;
 
-    public SalesRecordAdapter (Context context, ArrayList<SalesRecordArrayList> salesRecordList) {
-        super(context, 0, salesRecordList);
+    SalesRecordAdapter(Context context, ArrayList<SalesRecordOrder> salesRecordOrder) {
+        super(context,R.layout.sales_record_row,salesRecordOrder);
+        this.context = context;
+        //this.resource = resource;
+        this.salesRecordOrder =salesRecordOrder;
     }
+
+/*SalesRecordAdapter (Callback<SalesRecord> context, ArrayList<SalesRecordOrder> salesRecordOrder) {
+        super(context, R.layout.sales_record_row_relative, salesRecordOrder);
+    }*/
 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
-        SalesRecordArrayList item = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
+
+        SalesRecordOrder item = salesRecordOrder.get(position);
+
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.sales_record_row, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.sales_record_row, parent, false);
         }
         // Lookup view for data population
+
         TextView foodid = (TextView) convertView.findViewById(R.id.foodId);
         TextView foodname = (TextView) convertView.findViewById(R.id.foodName);
         TextView foodextra = (TextView) convertView.findViewById(R.id.foodExtra);
         TextView foodprice = (TextView) convertView.findViewById(R.id.foodPrice);
         // Populate the data into the template view using the data object
-        foodid.setText(item.foodId);
-        foodname.setText(item.foodName);
-        foodextra.setText(item.foodExtra);
-        foodprice.setText(item.foodPrice);
+
+        foodid.setText("# "+String.valueOf(item.orderIdSales));
+        foodname.setText(item.orderNameSales);
+        foodextra.setText(item.orderNameExtraSales);
+        foodprice.setText(String.valueOf(item.orderPriceSales)+" .-");
         // Return the completed view to render on screen
+
         return convertView;
     }
 
@@ -148,14 +163,14 @@ public class SalesRecordAdapter extends ArrayAdapter<SalesRecordArrayList> {
 
 
         /*String singleItem = (String) getItem(position);
-        TextView foodname = (TextView) customView.findViewById(R.id.foodName);
-        TextView foodextra = (TextView) customView.findViewById(R.id.foodExtra);
-        TextView foodprice = (TextView) customView.findViewById(R.id.foodPrice);
+        TextView foodname = (TextView) con vertView.findViewById(R.id.foodName);
+        TextView foodextra = (TextView) con vertView.findViewById(R.id.foodExtra);
+        TextView foodprice = (TextView) con vertView.findViewById(R.id.foodPrice);
 
         foodname.setText(name[position]);
         foodextra.setText(extra[position]);
         foodprice.setText(price[position]);
-        return customView;
+        return con vertView;
     }*/
 
 

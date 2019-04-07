@@ -1,8 +1,12 @@
 package com.example.vcanteenvendor;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -46,11 +50,11 @@ public class MainActivity extends AppCompatActivity {
 
     OrderList List;
     List<Order> orderList;
+    private ProgressDialog progressDialog;
 
+    SharedPreferences sharedPref;
 
-
-
-
+    int vendor_id;
 
 
     @Override
@@ -71,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
         foodExtra = (TextView) findViewById(R.id.foodExtra);
 
         orderListListView = findViewById(R.id.orderlist);
+
+
+        sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
+        vendor_id =  sharedPref.getInt("vendor_id", 0);
 
 
         //////////////////////////////////////////   Navigation   //////////////////////////////////////
@@ -111,17 +119,25 @@ public class MainActivity extends AppCompatActivity {
 
         //////////////////////////////////////////   Order Adapter   //////////////////////////////////////
 
+
         List = new OrderList(orderList);
+
+
 
         orderLoadUp(); //GET DATA FROM JSON
 
-
+        /*ListAdapter testAdapter = new OrderAdapter(this, List); //Put the arraylist here
+        orderListListView.setAdapter(testAdapter);*/
 
 
 
     }
 
     private void orderLoadUp() {
+
+        progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog = ProgressDialog.show(MainActivity.this, "",
+                "Loading. Please wait...", true);
 
         String url="https://vcanteen.herokuapp.com/";
 
@@ -133,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        Call<OrderList> call = jsonPlaceHolderApi.getOrder(1); //SET LOGIC TO INSERT ID HERE
+        Call<OrderList> call = jsonPlaceHolderApi.getOrder(vendor_id); //SET LOGIC TO INSERT ID HERE
 
 
         call.enqueue(new Callback<OrderList>() {
@@ -142,14 +158,19 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!response.isSuccessful()) {
                     System.out.println("\n\n\n\n********************"+ "Code: " + response.code() +"********************\n\n\n\n");
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "You have 0 order.",  Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+
                 List = response.body();
-                ListAdapter testAdapter = new OrderAdapter(MainActivity.this, List); //Put the arraylist here
-                orderListListView.setAdapter(testAdapter);
+                if(List !=null){
 
-
+                    ListAdapter testAdapter = new OrderAdapter(MainActivity.this, List); //Put the arraylist here
+                    orderListListView.setAdapter(testAdapter);
+                    progressDialog.dismiss();
+                }
 
             }
 
@@ -161,6 +182,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Closing Activity")
+                .setMessage("Are you sure you want to close this activity?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
 

@@ -1,47 +1,104 @@
 package com.example.vcanteenvendor;
-
+import com.google.gson.annotations.SerializedName;
+//ไม่ใช้แล้ว
 //////////////////////// get & set & constructor /////////////////////
-public class SalesRecordArrayList{
-    public String foodId, foodName, foodExtra, foodPrice;
+public class SalesRecordArrayList{  ///equvilant to class post
 
-    public SalesRecordArrayList(String foodId, String foodName, String foodExtra, String foodPrice){
+    /*@SerializedName("orderName")
+    public String orderName;
 
-        this.setFoodId(foodId);
-        this.setFoodName(foodName);
-        this.setFoodExtra(foodExtra);
-        this.setFoodPrice(foodPrice);
+    @SerializedName("orderNameExtra")
+    public String orderNameExtra;
+
+    @SerializedName("orderId")
+    public int orderId;
+
+    @SerializedName("orderPrice")
+    public int orderPrice;
+
+    @SerializedName("amount")
+    public int amount;
+
+    @SerializedName("sum")
+    public int sum;
+    
+    public SalesRecordArrayList(String orderName, int amount){
+
+        this.orderName = orderName;
+        this.amount = amount;
     }
 
-    public String getFoodId() {
-        return foodId;
+    public SalesRecordArrayList(int sum){
+
+        this.sum = sum;
     }
 
-    public void setFoodId(String foodId) {
-        this.foodId = foodId;
+    public SalesRecordArrayList(int orderId, String orderName, String orderNameExtra, int orderPrice){
+
+        //this.setorderId(Integer.parseInt(orderId));
+        this.orderId = orderId;
+        this.orderName = orderName;
+        this.orderNameExtra = orderNameExtra;
+        this.orderPrice = orderPrice;
     }
 
-    public String getFoodName() {
-        return foodName;
+    public SalesRecordArrayList(int orderId, String orderName, String orderNameExtra, int orderPrice, int amount, int sum){
+
+        this.orderId = orderId;
+        this.orderName = orderName;
+        this.orderNameExtra = orderNameExtra;
+        this.orderPrice = orderPrice;
+        this.amount = amount;
+        this.sum = sum;
+
     }
 
-    public void setFoodName(String foodExtra) {
-        this.foodName = foodName;
+    public int getorderId() {
+        return orderId;
     }
 
-    public String getFoodExtra() {
-        return foodExtra;
+    public void setorderId(int orderId) {
+        this.orderId = orderId;
     }
 
-    public void setFoodExtra(String foodExtra) {
-        this.foodExtra = foodExtra;
+    public String getorderName() {
+        return orderName;
     }
 
-    public String getFoodPrice() {
-        return foodPrice;
+    public void setorderName(String orderNameExtra) {
+        this.orderName = orderName;
     }
 
-    public void setFoodPrice(String price) {
-        foodPrice = price;
+    public String getorderNameExtra() {
+        return orderNameExtra;
     }
+
+    public void setorderNameExtra(String orderNameExtra) {
+        this.orderNameExtra = orderNameExtra;
+    }
+
+    public int getorderPrice() {
+        return orderPrice;
+    }
+
+    public void setorderPrice(int orderPrice) {
+        this.orderPrice = orderPrice;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public int getSum() {
+        return sum;
+    }
+
+    public void setSum(int sum) {
+        this.sum = sum;
+    }*/
 
 }

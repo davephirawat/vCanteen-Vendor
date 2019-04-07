@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -82,6 +81,15 @@ public class AddEditMenuActivity extends AppCompatActivity {
 
 
 
+        //////////////////////////////////////////   Retrieve every info from menu   //////////////////////////////////////
+
+        nameInput.setText(getIntent().getStringExtra("foodName"));
+        priceInput.setText(String.valueOf(getIntent().getIntExtra("price",0)));
+
+        if(getIntent().getStringExtra("foodImageUrl") != null)
+        Glide.with(this).load(getIntent().getStringExtra("foodImageUrl")).apply(option).into(uploadImage);
+
+
 
 
 
@@ -119,7 +127,6 @@ public class AddEditMenuActivity extends AppCompatActivity {
 
             }
         }
-
 
 
         if(foodStatus != null){
