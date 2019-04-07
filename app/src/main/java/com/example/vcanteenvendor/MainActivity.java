@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     TextView foodName;
     TextView foodExtra;
 
+    Button refreshBtn;
+
     ListView orderListListView;
 
     OrderList List;
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         foodExtra = (TextView) findViewById(R.id.foodExtra);
 
         orderListListView = findViewById(R.id.orderlist);
+        refreshBtn = findViewById(R.id.refreshBtn);
 
 
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
@@ -108,6 +111,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goToSettings();
+            }
+        });
+
+        refreshBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(getIntent());
             }
         });
 
