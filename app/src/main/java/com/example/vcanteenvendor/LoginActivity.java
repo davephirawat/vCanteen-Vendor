@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,6 +30,16 @@ import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -81,11 +92,18 @@ public class LoginActivity extends AppCompatActivity {
     private final String URL = "https://vcanteen.herokuapp.com/";
     private boolean isHidden = true;
 
+    private FirebaseAuth mAuth;
+    private DatabaseReference dbUsers;
+    private String firebaseToken;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        FirebaseApp.initializeApp(LoginActivity.this);
+        mAuth = FirebaseAuth.getInstance();
 
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
 
@@ -112,7 +130,41 @@ public class LoginActivity extends AppCompatActivity {
                 passwd = new String(Hex.encodeHex(DigestUtils.sha256(passwd)));
                 System.out.println(passwd);
                 account_type = "NORMAL";
-                sendJSON(email, passwd);
+                progressDialog = new ProgressDialog(LoginActivity.this);
+                progressDialog = ProgressDialog.show(LoginActivity.this, "",
+                        "Loading. Please wait...", true);
+                mAuth.signInWithEmailAndPassword(email, passwd)
+                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    System.out.println("SUCCESS");
+                                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                    dbUsers = FirebaseDatabase.getInstance().getReference("users").child(uid);
+
+                                    dbUsers.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            for(DataSnapshot dsUser: dataSnapshot.getChildren())
+                                                firebaseToken = dsUser.getValue(String.class);
+                                            System.out.println("From datasnapshot: "+firebaseToken);
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                    System.out.println("FIREBASE TOKEN : "+firebaseToken);
+                                    sharedPref.edit().putString("firebaseToken", firebaseToken).commit();
+                                    sendJSON(email, passwd, firebaseToken);
+                                } else {
+                                    errorMessage.setText("Email or Password is Incorrect");
+                                    errorMessage.setVisibility(View.VISIBLE);
+                                    progressDialog.dismiss();
+                                }
+                            }
+                        });
             }
         });
 
@@ -293,8 +345,40 @@ public class LoginActivity extends AppCompatActivity {
                                             String str_lastname = json.optString("last_name");
 
                                             account_type = "FACEBOOK";
-                                            passwd = null;
-                                            sendJSON(email, passwd);
+                                            passwd = "firebaseOnlyNaja";
+                                            mAuth.signInWithEmailAndPassword(email, passwd)
+                                                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                                            if (task.isSuccessful()) {
+                                                                System.out.println("SUCCESS");
+                                                                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                                                dbUsers = FirebaseDatabase.getInstance().getReference("users").child(uid);
+
+                                                                dbUsers.addValueEventListener(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                        for(DataSnapshot dsUser: dataSnapshot.getChildren())
+                                                                            firebaseToken = dsUser.getValue(String.class);
+                                                                        System.out.println(firebaseToken);
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                    }
+                                                                });
+                                                                sharedPref.edit().putString("firebaseToken", firebaseToken).commit();
+                                                                passwd = null;
+                                                                sendJSON(email, passwd, firebaseToken);
+                                                            } else {
+                                                                errorMessage.setText("Email or Password is Incorrect");
+                                                                errorMessage.setVisibility(View.VISIBLE);
+                                                                System.out.println("FIREBASE LOGIN FAIL");
+                                                            }
+                                                        }
+                                                    });
+
 
                                         }
 
@@ -328,11 +412,9 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void sendJSON(String email, String pass) {
-        progressDialog = new ProgressDialog(LoginActivity.this);
-        progressDialog = ProgressDialog.show(LoginActivity.this, "",
-                "Loading. Please wait...", true);
-        LoginVendor loginVendor = new LoginVendor(email, passwd);
+    private void sendJSON(String email, String pass, String firebaseToken) {
+        LoginVendor loginVendor = new LoginVendor(email, passwd, firebaseToken, account_type);
+        System.out.println(loginVendor.toString());
         Gson gson = new GsonBuilder().serializeNulls().create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
@@ -341,10 +423,12 @@ public class LoginActivity extends AppCompatActivity {
         final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
         Call<LoginResponse> call = jsonPlaceHolderApi.sendLogin(loginVendor);
+        System.out.println(loginVendor.toString());
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if (response.code() != 200) {
+                System.out.println(response.code());
+                if (response.code() != 200 && response.code() != 409) {
                     // Fail
                     if (account_type.equals("FACEBOOK"))
                         sharedPref.edit().putString("token", "NO TOKEN JA EDOK").commit();
@@ -353,6 +437,11 @@ public class LoginActivity extends AppCompatActivity {
                     errorMessage.setVisibility(View.VISIBLE);
                     if (account_type.equals("FACEBOOK"))
                         LoginManager.getInstance().logOut();
+                    progressDialog.dismiss();
+                } else if(response.code()==409) {
+                    progressDialog.dismiss();
+                    errorMessage.setText("This account can only be logged into with Facebook");
+                    errorMessage.setVisibility(View.VISIBLE);
                 } else {
                     // Success
 

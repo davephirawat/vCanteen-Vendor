@@ -42,4 +42,11 @@ dependencies {
     implementation 'com.facebook.android:facebook-login:[4,5)'
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     implementation 'commons-codec:commons-codec:1.11'
+    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.google.firebase:firebase-messaging:17.4.0'
+    implementation 'com.google.firebase:firebase-database:16.1.0'
+    implementation 'com.google.firebase:firebase-storage:16.1.0'
+    implementation 'com.google.firebase:firebase-auth:16.2.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
