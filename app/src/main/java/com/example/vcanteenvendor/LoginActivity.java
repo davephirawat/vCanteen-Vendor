@@ -479,6 +479,7 @@ public class LoginActivity extends AppCompatActivity {
                     sharedPref.edit().putString("token", response.body().getToken()).commit();
                     System.out.println("==================VENDOR ID :::: "+response.body().getVendor_id()+" ==================");
                     sharedPref.edit().putInt("vendor_id", response.body().getVendor_id()).commit();
+                    sharedPref.edit().putString("account_type", account_type).commit();
                     System.out.println(response.body().getVendor_id());
                     progressDialog.dismiss();
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));

@@ -75,6 +75,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     ImageView vendorProfilePicture;
 
+    private Dialog confirmChangePassDialog;
+    private TextView cancelChangePass;
+    private Button confirmConfirmChangePass;
+
 
     Button changePass;
     Dialog changePassDialog;
@@ -98,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     private RequestQueue mQueue;
-    private String url="FROM ENDPOINTS";
+    private String url = "FROM ENDPOINTS";
 
     String email;
 
@@ -119,12 +123,12 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
 
-        orderStatusButton= (Button) findViewById(R.id.orderStatusButton);
-        menuButton= (Button) findViewById(R.id.menuButton);
-        salesRecordButton= (Button) findViewById(R.id.salesRecordButton);
-        settingsButton= (Button) findViewById(R.id.settingsButton);
+        orderStatusButton = (Button) findViewById(R.id.orderStatusButton);
+        menuButton = (Button) findViewById(R.id.menuButton);
+        salesRecordButton = (Button) findViewById(R.id.salesRecordButton);
+        settingsButton = (Button) findViewById(R.id.settingsButton);
 
-        signOutButton=(Button) findViewById(R.id.signOutButton);
+        signOutButton = (Button) findViewById(R.id.signOutButton);
         vendorStatusToggle = (Switch) findViewById(R.id.vendorStatusToggle);
         statusText = (TextView) findViewById(R.id.statusText);
 
@@ -150,13 +154,8 @@ public class SettingsActivity extends AppCompatActivity {
         accountJSONLoadUp();
 
 
-
-
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
-        vendor_id =  sharedPref.getInt("vendor_id", 0);
-
-
-
+        vendor_id = sharedPref.getInt("vendor_id", 0);
 
 
         //////////////////////////////////////////   Navigation   //////////////////////////////////////
@@ -205,7 +204,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
                 content.setText("Log out of vCanteen?");
-                content.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/SF-Pro-Text-Bold.otf"));
+                content.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/SF-Pro-Text-Bold.otf"));
                 positiveButton.setText("LOG OUT");
                 title.setVisibility(View.GONE);
 
@@ -222,7 +221,7 @@ public class SettingsActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
                         logOut();
-                        Toast.makeText(getApplicationContext(), "LOG OUT SUCCESS!",  Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "LOG OUT SUCCESS!", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
 
                     }
@@ -234,12 +233,11 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
 
-
         vendorStatusToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(!vendorStatusToggle.isChecked()){
+                if (!vendorStatusToggle.isChecked()) {
                     vendorStatusToggle.setChecked(true);
 
 
@@ -281,7 +279,7 @@ public class SettingsActivity extends AppCompatActivity {
                                     vendorStatusToggle.setChecked(false);
                                     cancelAllCookingOrders();
 
-                                    Toast.makeText(getApplicationContext(), "VENDOR CLOSED!",  Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "VENDOR CLOSED!", Toast.LENGTH_SHORT).show();
                                     positiveButton.setBackgroundResource(R.drawable.button_red_rounded);
                                     dialog.dismiss();
                                     statusText.setText("CLOSED");
@@ -338,86 +336,121 @@ public class SettingsActivity extends AppCompatActivity {
                 confirmChangePass.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        final String currPass = currPassBox.getText().toString();
+                        final String newPass = newPassBox.getText().toString();
+                        final String confirmPass = confirmNewPassBox.getText().toString();
 
-                        progressDialog = new ProgressDialog(SettingsActivity.this);
-                        progressDialog = ProgressDialog.show(SettingsActivity.this
-                                , "",
-                                "Loading. Please wait...", true);
-
-                        String currPass = currPassBox.getText().toString();
-                        String newPass = newPassBox.getText().toString();
-                        String confirmPass = confirmNewPassBox.getText().toString();
-
-                        if (currPass.equals(newPass)) {
-                            errorCurrPass.setText("Your new password can't be the same as your current passaword.");
+                        if (currPass.matches("") || newPass.matches("") || confirmPass.matches("")) { //pin just add
+                            errorCurrPass.setText("You must fill out all the fields.");
                             errorCurrPass.setVisibility(View.VISIBLE);
+                            errorConfirmPass.setVisibility(View.INVISIBLE);
+                            errorNewPass.setVisibility(View.INVISIBLE);
                             currPassBox.setText("");
                             newPassBox.setText("");
                             confirmNewPassBox.setText("");
-                            progressDialog.dismiss();
-
-                        } else if (!(newPass.equals(confirmPass))) {
-                            errorConfirmPass.setText("Password doesn't match. Please try again.");
-                            errorConfirmPass.setVisibility(View.VISIBLE);
+                        } else if (!PASSWORD_PATTERN.matcher(newPass).matches() || !PASSWORD_PATTERN.matcher(confirmPass).matches()) {
+                            errorNewPass.setText("Must be letter, number or these characters _ - * ' \" # & () @");
+                            errorNewPass.setVisibility(View.VISIBLE);
+                            errorConfirmPass.setVisibility(View.INVISIBLE);
+                            errorCurrPass.setVisibility(View.INVISIBLE);
                             //currentPassword.setText("");
                             newPassBox.setText("");
                             confirmNewPassBox.setText("");
-                            progressDialog.dismiss();
-
+                        } else if (!(newPass.equals(confirmPass))) {
+                            errorNewPass.setText("Password doesn't match. Please try again.");
+                            errorNewPass.setVisibility(View.VISIBLE);
+                            errorConfirmPass.setVisibility(View.INVISIBLE);
+                            errorCurrPass.setVisibility(View.INVISIBLE);
+                            //currentPassword.setText("");
+                            newPassBox.setText("");
+                            confirmNewPassBox.setText("");
                         } else if (newPass.length() < 8 || newPass.length() > 20) {
                             errorNewPass.setText("Invalid Password. Please try again.");
                             errorNewPass.setVisibility(View.VISIBLE);
+                            errorConfirmPass.setVisibility(View.INVISIBLE);
+                            errorCurrPass.setVisibility(View.INVISIBLE);
                             //currentPassword.setText("");
                             newPassBox.setText("");
                             confirmNewPassBox.setText("");
-                            progressDialog.dismiss();
-                        } else if (!PASSWORD_PATTERN.matcher(newPass).matches()) {
-                            errorNewPass.setText("Invalid Password. Please try again.");
-                            errorNewPass.setVisibility(View.VISIBLE);
-                            //currentPassword.setText("");
+                        } else if (currPass.equals(newPass)) {
+                            errorCurrPass.setText("Your new password can't be the same as your current passaword.");
+                            errorCurrPass.setVisibility(View.VISIBLE);
+                            errorConfirmPass.setVisibility(View.INVISIBLE);
+                            errorNewPass.setVisibility(View.INVISIBLE);
+                            currPassBox.setText("");
                             newPassBox.setText("");
                             confirmNewPassBox.setText("");
-                            progressDialog.dismiss();
                         } else {
-                            errorNewPass.setVisibility(View.GONE);
-                            errorConfirmPass.setVisibility(View.GONE);
-                            errorCurrPass.setVisibility(View.GONE);
+                            confirmChangePassDialog = new Dialog(SettingsActivity.this);
+                            confirmChangePassDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            confirmChangePassDialog.setContentView(R.layout.change_password_popup);
 
-                            url="https://vcanteen.herokuapp.com/";
+                            confirmConfirmChangePass = confirmChangePassDialog.findViewById(R.id.confirmButtonPassword);
+                            cancelChangePass = confirmChangePassDialog.findViewById(R.id.cancelButtonPassword);
 
-                            Gson gson = new GsonBuilder().serializeNulls().create();
-                            Retrofit retrofit = new Retrofit.Builder()
-                                    .baseUrl(url)
-                                    .addConverterFactory(GsonConverterFactory.create(gson))
-                                    .build();
-                            final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+                            confirmConfirmChangePass.setEnabled(true);
+                            cancelChangePass.setEnabled(true);
 
-                            String hashedNewPass = new String(Hex.encodeHex(DigestUtils.sha256(newPass)));
-                            ChangePass postData = new ChangePass(hashedNewPass, email);
-                            System.out.println(postData.toString());
-                            Call<Void> call = jsonPlaceHolderApi.resetPass(postData);
+                            confirmChangePassDialog.show();
 
-                            call.enqueue(new Callback<Void>() {
+                            confirmConfirmChangePass.setOnClickListener(new View.OnClickListener() {
                                 @Override
-                                public void onResponse(Call<Void> call, Response<Void> response) {
-                                    if (response.code() != 200) {
-                                        // ERROR
-                                        errorConfirmPass.setText("Current password is incorrect. Please try again.");
-                                        errorConfirmPass.setVisibility(View.VISIBLE);
-                                        confirmNewPassBox.setText("");
-                                        currPassBox.setText("");
-                                        newPassBox.setText("");
-                                        progressDialog.dismiss();
-                                    } else {
-                                        // SUCCESS
-                                        Toast.makeText(getApplicationContext(), "Password successfully changed.", Toast.LENGTH_SHORT).show();
-                                        progressDialog.dismiss();
-                                    }
+                                public void onClick(View v) {
+                                    url = "https://vcanteen.herokuapp.com/";
+
+                                    Gson gson = new GsonBuilder().serializeNulls().create();
+                                    Retrofit retrofit = new Retrofit.Builder()
+                                            .baseUrl(url)
+                                            .addConverterFactory(GsonConverterFactory.create(gson))
+                                            .build();
+                                    final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
+                                    String hashedNewPass = new String(Hex.encodeHex(DigestUtils.sha256(newPass)));
+                                    ChangePass postData = new ChangePass(hashedNewPass, email);
+                                    String hashedCurrPass = new String(Hex.encodeHex(DigestUtils.sha256(currPass)));
+
+                                    String firebaseToken = sharedPref.getString("firebaseToken", "default no token");
+                                    String account_type = sharedPref.getString("account_type", "DEFAULT");
+                                    LoginVendor loginVendor = new LoginVendor(email, hashedCurrPass, firebaseToken, account_type);
+                                    System.out.println(loginVendor.toString());
+                                    Call<LoginResponse> call = jsonPlaceHolderApi.sendLogin(loginVendor);
+                                    progressDialog = new ProgressDialog(SettingsActivity.this);
+                                    progressDialog = ProgressDialog.show(SettingsActivity.this
+                                            , "",
+                                            "Loading. Please wait...", true);
+                                    call.enqueue(new Callback<LoginResponse>() {
+                                        @Override
+                                        public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                                            if (response.code() != 200) {
+                                                errorCurrPass.setText("Current Password is incorrect.");
+                                                errorCurrPass.setVisibility(View.VISIBLE);
+                                                errorNewPass.setVisibility(View.INVISIBLE);
+                                                errorConfirmPass.setVisibility(View.INVISIBLE);
+                                                confirmChangePassDialog.cancel();
+                                                progressDialog.dismiss();
+                                            } else {
+                                                changePass(newPass);
+                                                confirmChangePassDialog.cancel();
+                                                changePassDialog.cancel();
+                                                progressDialog.dismiss();
+                                                Toast.makeText(getApplicationContext(), "Password successfully changed.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<LoginResponse> call, Throwable t) {
+
+                                        }
+                                    });
+
+
                                 }
+                            });
 
+                            cancelChangePass.setOnClickListener(new View.OnClickListener() {
                                 @Override
-                                public void onFailure(Call<Void> call, Throwable t) {
-
+                                public void onClick(View v) {
+                                    confirmChangePassDialog.cancel();
                                 }
                             });
                         }
@@ -459,7 +492,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void cancelAllCookingOrders() {
 
-        url="https://vcanteen.herokuapp.com/";
+        url = "https://vcanteen.herokuapp.com/";
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -476,7 +509,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 if (!response.isSuccessful()) {
                     vendorNameInput.setText("Code: " + response.code());
-                    System.out.println("\n\n\n\n********************"+ "Code: " + response.code() +"********************\n\n\n\n");
+                    System.out.println("\n\n\n\n********************" + "Code: " + response.code() + "********************\n\n\n\n");
                     return;
                 }
 
@@ -486,7 +519,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 vendorProfile.setText(t.getMessage());
-                System.out.println("\n\n\n\n********************"+ t.getMessage() +"********************\n\n\n\n");
+                System.out.println("\n\n\n\n********************" + t.getMessage() + "********************\n\n\n\n");
 
 
             }
@@ -496,7 +529,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void openCloseVendor(String vendorStatus) {
 
-        url="https://vcanteen.herokuapp.com/";
+        url = "https://vcanteen.herokuapp.com/";
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -536,7 +569,7 @@ public class SettingsActivity extends AppCompatActivity {
         progressDialog = ProgressDialog.show(SettingsActivity.this, "",
                 "Loading. Please wait...", true);
 
-        url="https://vcanteen.herokuapp.com/";
+        url = "https://vcanteen.herokuapp.com/";
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -548,7 +581,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
         String token = sharedPref.getString("token", "empty token");
-        int vendor_id =  sharedPref.getInt("vendor_id", 0);
+        int vendor_id = sharedPref.getInt("vendor_id", 0);
         System.out.println(vendor_id);
         Call<VendorInfoArray> call = jsonPlaceHolderApi.getVendorInfo(vendor_id);
 
@@ -567,7 +600,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 vendorInfoArray = response.body();
 
-                if (vendorInfoArray != null){
+                if (vendorInfoArray != null) {
 
                     vendor = vendorInfoArray.vendorInfo.get(0);
                     vendorNameInput.setText(vendor.getVendorName());
@@ -575,8 +608,8 @@ public class SettingsActivity extends AppCompatActivity {
                     System.out.println(email);
                     vendorEmailInput.setText(vendor.getVendorEmail());
 
-                    if (vendor.getVendorImage()!=null)
-                    Glide.with(SettingsActivity.this).load(vendor.getVendorImage()).apply(option).into(vendorProfilePicture);
+                    if (vendor.getVendorImage() != null)
+                        Glide.with(SettingsActivity.this).load(vendor.getVendorImage()).apply(option).into(vendorProfilePicture);
                     //This array always have 1 member, so use get(1).
 
                 } else {
@@ -584,35 +617,32 @@ public class SettingsActivity extends AppCompatActivity {
                 }
 
 
-
-
-                if(vendorInfoArray.findServiceProviderFromList(vendorInfoArray.getVendorPaymentMethod(), "CU_NEX")){
+                if (vendorInfoArray.findServiceProviderFromList(vendorInfoArray.getVendorPaymentMethod(), "CU_NEX")) {
                     checkCUNex.setVisibility(View.VISIBLE);
                 }
 
-                if(vendorInfoArray.findServiceProviderFromList(vendorInfoArray.getVendorPaymentMethod(), "SCB_EASY")){
+                if (vendorInfoArray.findServiceProviderFromList(vendorInfoArray.getVendorPaymentMethod(), "SCB_EASY")) {
                     checkScb.setVisibility(View.VISIBLE);
                 }
 
-                if(vendorInfoArray.findServiceProviderFromList(vendorInfoArray.getVendorPaymentMethod(), "K_PLUS")){
+                if (vendorInfoArray.findServiceProviderFromList(vendorInfoArray.getVendorPaymentMethod(), "K_PLUS")) {
                     checkKplus.setVisibility(View.VISIBLE);
                 }
 
-                if(vendorInfoArray.findServiceProviderFromList(vendorInfoArray.getVendorPaymentMethod(), "TRUEMONEY_WALLET")){
+                if (vendorInfoArray.findServiceProviderFromList(vendorInfoArray.getVendorPaymentMethod(), "TRUEMONEY_WALLET")) {
                     checkTrueMoney.setVisibility(View.VISIBLE);
                 }
 
 
-                if(vendor.getVendorStatus().equals("OPEN")){
+                if (vendor.getVendorStatus().equals("OPEN")) {
                     vendorStatusToggle.setChecked(true);
                     statusText.setText("OPEN");
                     statusText.setTextColor(getResources().getColor(R.color.pinkPrimary));
-                }else{
+                } else {
                     vendorStatusToggle.setChecked(false);
                     statusText.setText("CLOSED");
                     statusText.setTextColor(Color.parseColor("#828282"));
                 }
-
 
 
             }
@@ -629,21 +659,13 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
-
-
     //////////////////////////////////////////   Navigation(cont.)   //////////////////////////////////////
     public void goToMain() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
-    public void goToMenu(){
+    public void goToMenu() {
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }
@@ -653,12 +675,56 @@ public class SettingsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void logOut(){
+    public void logOut() {
         LoginManager.getInstance().logOut();
         sharedPref.edit().putString("token", "NO TOKEN JA EDOK").commit();
         sharedPref.edit().putInt("vendor_id", 0).commit();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-   }
+    }
+
+    private void changePass(String newPass) {
+
+        errorNewPass.setVisibility(View.GONE);
+        errorConfirmPass.setVisibility(View.GONE);
+        errorCurrPass.setVisibility(View.GONE);
+
+        url = "https://vcanteen.herokuapp.com/";
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
+        String hashedNewPass = new String(Hex.encodeHex(DigestUtils.sha256(newPass)));
+        ChangePass postData = new ChangePass(hashedNewPass, email);
+        System.out.println(postData.toString());
+        Call<Void> call = jsonPlaceHolderApi.resetPass(postData);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.code() != 200) {
+                    // ERROR
+                    errorConfirmPass.setText("Current password is incorrect. Please try again.");
+                    errorConfirmPass.setVisibility(View.VISIBLE);
+                    confirmNewPassBox.setText("");
+                    currPassBox.setText("");
+                    newPassBox.setText("");
+                    progressDialog.dismiss();
+                } else {
+                    // SUCCESS
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
 
 }
