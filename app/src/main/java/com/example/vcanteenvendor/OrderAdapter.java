@@ -179,7 +179,7 @@ public class OrderAdapter extends ArrayAdapter {
 
 
 
-        foodname.setText(singleOrder.getOrderId());
+        foodname.setText(singleOrder.getOrderName());
         foodextra.setText(singleOrder.getOrderNameExtra());
         return customView;
     }

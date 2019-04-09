@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ic_vcanteen_logo"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="50dp"/>
 
     <TextView
@@ -150,19 +150,23 @@
         android:background="@drawable/button_facebook"
         />
 
-
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
     <Button
         android:id="@+id/forgot_pw_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Forgot Password?"
+        android:layout_alignParentTop="true"
         android:textAllCaps="false"
         android:fontFamily="@font/sfprotext_semibold"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="15dp"
         android:textSize="22dp"
         android:textColor="#7BCAE8"
         android:background="?android:attr/selectableItemBackground"/>
+</RelativeLayout>
 </LinearLayout>
 
     <ImageView

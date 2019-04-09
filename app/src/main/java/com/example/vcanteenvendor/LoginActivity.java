@@ -447,6 +447,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     // save vendor_id, token
                     sharedPref.edit().putString("token", response.body().getToken()).commit();
+                    System.out.println("==================VENDOR ID :::: "+response.body().getVendor_id()+" ==================");
                     sharedPref.edit().putInt("vendor_id", response.body().getVendor_id()).commit();
                     System.out.println(response.body().getVendor_id());
                     progressDialog.dismiss();

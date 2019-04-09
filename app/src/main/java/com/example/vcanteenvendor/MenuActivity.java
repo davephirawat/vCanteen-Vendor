@@ -106,10 +106,13 @@ public class MenuActivity extends AppCompatActivity {
         });
 
 
-        menuLoadUp();
+
 
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
         vendor_id =  sharedPref.getInt("vendor_id", 0);
+        System.out.println("LDSKFJSDKLFJLDSJFDLSK VENDORID "+vendor_id);
+
+        menuLoadUp();
 
 
     }
@@ -134,6 +137,7 @@ public class MenuActivity extends AppCompatActivity {
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
         Call<CombinationAlacarteList> call = jsonPlaceHolderApi.getAllMenu(vendor_id); //SET LOGIC TO INSERT ID HERE
+        System.out.println("VENDOR ID : "+vendor_id);
 
 
         call.enqueue(new Callback<CombinationAlacarteList>() {
