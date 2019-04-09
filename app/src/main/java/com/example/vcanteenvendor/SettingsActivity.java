@@ -253,9 +253,9 @@ public class SettingsActivity extends AppCompatActivity {
                     final Button positiveButton = (Button) dialog.findViewById(R.id.positiveButton);
 
 
-                    title.setText("Closing Menu");
+                    title.setText("Closing Restaurant");
                     content.setText(R.string.closing_vendor);
-                    positiveButton.setText("close menu");
+                    positiveButton.setText("close vendor");
                     //content.setGravity(Gravity.LEFT);
 
 
@@ -272,12 +272,15 @@ public class SettingsActivity extends AppCompatActivity {
                         public void onClick(View v) {
 
                             positiveButton.setBackgroundResource(R.drawable.button_grey_rounded);
+                            openCloseVendor("CLOSE");
+
 
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     vendorStatusToggle.setChecked(false);
-                                    openCloseVendor("CLOSE");
+                                    cancelAllCookingOrders();
+
                                     Toast.makeText(getApplicationContext(), "VENDOR CLOSED!",  Toast.LENGTH_SHORT).show();
                                     positiveButton.setBackgroundResource(R.drawable.button_red_rounded);
                                     dialog.dismiss();
@@ -454,6 +457,43 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    private void cancelAllCookingOrders() {
+
+        url="https://vcanteen.herokuapp.com/";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        Call<Void> call = jsonPlaceHolderApi.cancelAllOrder(vendor_id);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                if (!response.isSuccessful()) {
+                    vendorNameInput.setText("Code: " + response.code());
+                    System.out.println("\n\n\n\n********************"+ "Code: " + response.code() +"********************\n\n\n\n");
+                    return;
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                vendorProfile.setText(t.getMessage());
+                System.out.println("\n\n\n\n********************"+ t.getMessage() +"********************\n\n\n\n");
+
+
+            }
+        });
+
+    }
+
     private void openCloseVendor(String vendorStatus) {
 
         url="https://vcanteen.herokuapp.com/";
@@ -590,52 +630,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
 
-    private void testPut() {
 
-        url="https://api.jsonbin.io/";
-
-        vendor.setVendorEmail("kuy");
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-
-        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<Vendor> call = jsonPlaceHolderApi.getVendor2(1, vendor);
-
-        call.enqueue(new Callback<Vendor>() {
-            @Override
-            public void onResponse(Call<Vendor> call, Response<Vendor> response) {
-
-                if (!response.isSuccessful()) {
-                    vendorNameInput.setText("Code: " + response.code());
-                    return;
-                }
-
-                vendor = response.body();
-                vendorNameInput.setText(vendor.getVendorName());
-                vendorEmailInput.setText(vendor.getVendorEmail());
-
-                /*if(vendor.findServiceProviderFromList(vendor.getVendorPaymentMethod())){
-                    checkCUNex.setVisibility(View.VISIBLE);
-                    vendorProfile.setText(vendor.getVendorPaymentMethod().toString());
-                }*/
-
-
-            }
-
-            @Override
-            public void onFailure(Call<Vendor> call, Throwable t) {
-                vendorProfile.setText(t.getMessage());
-                //System.out.println("\n\n\n\n"+ t.getMessage() +"\n\n\n\n");
-
-            }
-        });
-
-
-    }
 
 
 

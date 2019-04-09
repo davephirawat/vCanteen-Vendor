@@ -39,6 +39,8 @@ public class OrderAdapter extends ArrayAdapter {
     Order singleOrder;
     ProgressDialog progressDialog;
 
+    int mPosition;
+
 
 
 
@@ -62,7 +64,10 @@ public class OrderAdapter extends ArrayAdapter {
         customView = orderInflater.inflate(R.layout.order_row_relative, parent, false);
 
 
+
         singleOrder = (Order) getItem(position);
+
+        final int singleOrderId = singleOrder.getOrderId();
 
         foodname = (TextView) customView.findViewById(R.id.foodName);
         foodextra = (TextView) customView.findViewById(R.id.foodExtra);
@@ -92,7 +97,7 @@ public class OrderAdapter extends ArrayAdapter {
                 positiveButton.setText("CONFIRM");
                 //negativeButton.setVisibility(View.GONE);
 
-               
+
 
 
 
@@ -145,7 +150,7 @@ public class OrderAdapter extends ArrayAdapter {
                     @Override
                     public void onClick(View v) {
 
-                        orderCancel();
+                        orderCancel(singleOrderId);
                         //another put
                         mOrderArrayList.remove(position);
                         OrderAdapter.super.notifyDataSetChanged();
@@ -170,7 +175,7 @@ public class OrderAdapter extends ArrayAdapter {
                 mOrderArrayList.remove(position);
                 OrderAdapter.super.notifyDataSetChanged();
 
-                orderDone();
+                orderDone(singleOrderId);
                 //sent put here
             }
         });
@@ -187,7 +192,7 @@ public class OrderAdapter extends ArrayAdapter {
 
 
 
-    private void orderCancel() {
+    private void orderCancel(int orderId) {
 
         String url="https://vcanteen.herokuapp.com/";
 
@@ -198,7 +203,7 @@ public class OrderAdapter extends ArrayAdapter {
 
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(singleOrder.getOrderId(), "CANCELLED");
+        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(orderId, "CANCELLED");
 
         call.enqueue(new Callback<Void>() {
             @Override
@@ -225,7 +230,7 @@ public class OrderAdapter extends ArrayAdapter {
 
 
 
-    private void orderDone() {
+    private void orderDone(int orderId) {
 
         String url="https://vcanteen.herokuapp.com/";
 
@@ -236,7 +241,7 @@ public class OrderAdapter extends ArrayAdapter {
 
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(singleOrder.getOrderId(), "DONE");
+        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(orderId, "DONE");
 
         call.enqueue(new Callback<Void>() {
             @Override
