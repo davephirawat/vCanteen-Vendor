@@ -115,7 +115,19 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:background="#FAFAFA">
+        android:background="#FAFAFA"
+        android:gravity="center|right"
+        android:paddingRight="30dp">
+
+        <Button
+            android:id="@+id/refreshBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/less_round_pink_btn"
+            android:text="REFRESH"
+            android:textColor="@android:color/white"
+            android:paddingHorizontal="40dp"
+            />
 
     </RelativeLayout>
 
