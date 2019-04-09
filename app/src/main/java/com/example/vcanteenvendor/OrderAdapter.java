@@ -92,7 +92,7 @@ public class OrderAdapter extends ArrayAdapter {
                 positiveButton.setText("CONFIRM");
                 //negativeButton.setVisibility(View.GONE);
 
-               
+
 
 
 
