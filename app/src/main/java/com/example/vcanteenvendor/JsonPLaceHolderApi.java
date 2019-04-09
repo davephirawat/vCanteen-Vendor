@@ -25,15 +25,8 @@ interface JsonPlaceHolderApi {
     Call<CombinationAlacarteList> getAllMenu(@Path("vendorId") int vendorId);
 
 
-    /*@FormUrlEncoded
-    @POST("b/5c9c37331c56bb1ec38f9c67/2")
-    Call<Vendor> getVendor(
-            @Field("vendorID") int vendorId
-    );*/
 
 
-    @PUT("b/5c9c37331c56bb1ec38f9c67/2")
-    Call<Vendor> getVendor2(@Query("vendorID") int vendorId, @Body Vendor vendor);
 
     @POST("v1/user-authentication/vendor/check/token")
     Call<LoginResponse> sendLogin(@Body LoginVendor loginVendor);
@@ -78,4 +71,8 @@ interface JsonPlaceHolderApi {
 
     @POST("v1/user-authentication/vendor/verify/token")
     Call<TokenVerification> verifyToken(@Body Token token);
+
+    @FormUrlEncoded
+    @PUT("v1/settings/vendor/orders/cancel-all")
+    Call<Void> cancelAllOrder(@Field("vendorId") int vendorId);
 }

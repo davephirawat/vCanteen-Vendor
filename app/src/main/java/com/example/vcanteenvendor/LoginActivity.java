@@ -1,7 +1,9 @@
 package com.example.vcanteenvendor;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
@@ -15,6 +17,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -101,6 +104,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
 
         FirebaseApp.initializeApp(LoginActivity.this);
         mAuth = FirebaseAuth.getInstance();
@@ -310,6 +315,31 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+
+        /*emailField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
+
+        passField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });*/
+        closeKeyboard();
+
+
+
+
     }
 
     private void Fblogin() {
@@ -465,4 +495,19 @@ public class LoginActivity extends AppCompatActivity {
         RequestOptions option = new RequestOptions().centerCrop();
         Glide.with(LoginActivity.this).load(R.drawable.hero_image).apply(option).into(chefpic);
     }
+
+    /*public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }*/
+
+    private void closeKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+
 }

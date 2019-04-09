@@ -242,11 +242,15 @@ public class AddEditMenuActivity extends AppCompatActivity {
         });
 
 
+        
 
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        toggle.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked==false){
+            public void onClick(View v) {
+
+
+                if(!toggle.isChecked() && foodId != 0){
+                    toggle.setChecked(true);
 
                     final Dialog dialog = new Dialog(AddEditMenuActivity.this);
 
@@ -260,15 +264,15 @@ public class AddEditMenuActivity extends AppCompatActivity {
 
                     title.setText("Closing Menu");
                     content.setText("Awaiting orders for this menu\n" +
-                            "will be cancelled immediately.\n" +
-                            "\n" +
-                            "Are you sure?");
+                            "will be cancelled after saving.\n"
+                    );
                     positiveButton.setText("close menu");
 
 
                     negativeButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            toggle.setChecked(true);
                             dialog.dismiss();
                         }
                     });
@@ -276,6 +280,7 @@ public class AddEditMenuActivity extends AppCompatActivity {
                     positiveButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            toggle.setChecked(false);
 
                             Toast.makeText(getApplicationContext(), "MENU CLOSED!",  Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
@@ -286,6 +291,7 @@ public class AddEditMenuActivity extends AppCompatActivity {
                     dialog.show();
 
                 }
+
             }
         });
 
