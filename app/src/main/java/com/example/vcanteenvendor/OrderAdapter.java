@@ -1,6 +1,7 @@
 package com.example.vcanteenvendor;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -18,25 +19,64 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class OrderAdapter extends ArrayAdapter {
 
+    private OrderList mOrderList;
+    private List<Order> mOrderArrayList;
+    View customView;
+    TextView foodname;
+    TextView foodextra;
+    Button cancelButton;
+    Button doneButton;
+    Order singleOrder;
+    ProgressDialog progressDialog;
+
+    int mPosition;
 
 
-    OrderAdapter(Context context, String[] a){
 
-        super(context, R.layout.order_row_relative , a);
+
+    OrderAdapter(Context context, OrderList List){
+        super(context, R.layout.order_row_relative , List.orderList);
+        mOrderList=List;
+        mOrderArrayList = List.orderList;
+
     }
 
+    /*OrderAdapter(Context context, String[] orderList){
+
+        super(context, R.layout.order_row_relative , orderList);
+    }*/
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+
+    public View getView(final int position, View convertView, ViewGroup parent){
+
         LayoutInflater orderInflater = LayoutInflater.from(getContext());
-        View customView = orderInflater.inflate(R.layout.order_row_relative, parent, false);
+        customView = orderInflater.inflate(R.layout.order_row_relative, parent, false);
 
-        String singleItem = (String) getItem(position);
-        final TextView foodname = (TextView) customView.findViewById(R.id.foodName);
-        TextView foodextra = (TextView) customView.findViewById(R.id.foodExtra);
 
-        final Button cancelButton = (Button) customView.findViewById(R.id.cancelButton);
+
+        singleOrder = (Order) getItem(position);
+
+        final int singleOrderId = singleOrder.getOrderId();
+
+        foodname = (TextView) customView.findViewById(R.id.foodName);
+        foodextra = (TextView) customView.findViewById(R.id.foodExtra);
+        cancelButton = (Button) customView.findViewById(R.id.cancelButton);
+        doneButton = (Button) customView.findViewById(R.id.doneButton);
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +96,9 @@ public class OrderAdapter extends ArrayAdapter {
 
                 positiveButton.setText("CONFIRM");
                 //negativeButton.setVisibility(View.GONE);
+
+
+
 
 
 
@@ -107,7 +150,10 @@ public class OrderAdapter extends ArrayAdapter {
                     @Override
                     public void onClick(View v) {
 
-
+                        orderCancel(singleOrderId);
+                        //another put
+                        mOrderArrayList.remove(position);
+                        OrderAdapter.super.notifyDataSetChanged();
 
 
                         dialog.dismiss();
@@ -120,15 +166,104 @@ public class OrderAdapter extends ArrayAdapter {
             }
         });
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        foodname.setText(singleItem);
-        foodextra.setText(singleItem);
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOrderArrayList.remove(position);
+                OrderAdapter.super.notifyDataSetChanged();
+
+                orderDone(singleOrderId);
+                //sent put here
+            }
+        });
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+        foodname.setText(singleOrder.getOrderName());
+        foodextra.setText(singleOrder.getOrderNameExtra());
         return customView;
     }
 
 
 
+
+    private void orderCancel(int orderId) {
+
+        String url="https://vcanteen.herokuapp.com/";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(orderId, "CANCELLED");
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                if (!response.isSuccessful()) {
+
+                    System.out.println("---------------**********---------------"+"Code: "+response.code()+"---------------**********---------------");
+                    return;
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+                System.out.println("---------------**********---------------"+t.getMessage()+"---------------**********---------------");
+            }
+        });
+
+    }
+
+
+
+
+    private void orderDone(int orderId) {
+
+        String url="https://vcanteen.herokuapp.com/";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        Call<Void> call = jsonPlaceHolderApi.editOrderStatus(orderId, "DONE");
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                if (!response.isSuccessful()) {
+
+                    System.out.println("---------------**********---------------"+"Code: "+response.code()+"---------------**********---------------");
+                    return;
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+                System.out.println("---------------**********---------------"+t.getMessage()+"---------------**********---------------");
+            }
+        });
+
+    }
 
 
 }

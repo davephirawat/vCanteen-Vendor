@@ -15,7 +15,7 @@
         android:id="@+id/dialogTitle"
         android:layout_gravity="center"
         android:layout_marginTop="0dp"
-        android:text="Cancel Order. Why ?"
+        android:text="Cancel Order?"
         android:gravity="center"
 
         android:textSize="24sp"
@@ -39,6 +39,7 @@
         android:fontFamily="@font/sfprotext_regular"
         android:textColor="@color/colortext"
         android:background="@drawable/button_gradient_rounded_unchecked"
+        android:visibility="gone"
         />
 
     <EditText
@@ -59,7 +60,8 @@
         android:background="@drawable/bg_input"
         android:paddingHorizontal="12dp"
         android:paddingVertical="14dp"
-        android:maxLength="10"/>
+        android:maxLength="10"
+        android:visibility="gone"/>
 
 
     <TextView

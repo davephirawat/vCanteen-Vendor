@@ -128,7 +128,157 @@
         android:layout_height="2dp"
         android:background="?android:attr/listDivider" />
 
+    <LinearLayout
+        android:layout_width="900dp"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+        >
+        <RelativeLayout
+            android:layout_width="230dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_gradient_rounded">
+            <TextView
+                android:id="@+id/today_net"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="TODAY NET INCOME"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="30dp"
+                android:layout_alignParentRight="true"
+                android:gravity="left"
+                android:fontFamily="@font/sfprotext_semibold"
+                android:textSize="18sp"
+                android:textColor="#ffffff"
+                />
+            <TextView
+                android:id="@+id/total_sales"
+                android:layout_width="wrap_content"
+                android:layout_below="@id/today_net"
+                android:layout_height="70dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="30dp"
+                android:layout_alignParentRight="true"
+                android:fontFamily="@font/sfprotext_semibold"
+                android:textSize="30sp"
+                android:gravity="left"
+                android:textColor="#ffffff"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="660dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/outline_rect">
+
+        <TextView
+            android:id="@+id/best_seller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BEST SELLER"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="12dp"
+            android:layout_alignParentLeft="true"
+            android:fontFamily="@font/sfprotext_semibold"
+            android:textSize="16sp"
+            android:textColor="@color/pinkPrimary"/>
+
+        <TextView
+            android:id="@+id/dishes_sold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DISHES SOLD"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/sfprotext_semibold"
+            android:textSize="16sp"
+            android:textColor="@color/pinkPrimary"
+            />
+
+         <TextView
+             android:id="@+id/best_seller_dish"
+             android:layout_width="550dp"
+             android:layout_marginTop="17dp"
+             android:layout_marginLeft="25dp"
+             android:layout_height="wrap_content"
+             android:layout_below="@id/best_seller"
+             android:fontFamily="@font/sfprotext_semibold"
+             android:textSize="20sp"
+             android:textColor="@color/colorPrimaryDark"
+             />
+
+            <TextView
+                android:id="@+id/number_sold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="17dp"
+                android:layout_marginRight="30dp"
+                android:layout_below="@id/dishes_sold"
+                android:fontFamily="@font/sfprotext_semibold"
+                android:textSize="20sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </RelativeLayout>>
 
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="900dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="3dp"
+        android:layout_gravity="center"
+        android:weightSum="8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="ORDER NO."
+            android:layout_marginLeft="30dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/sfprotext_semibold"
+            android:textSize="12dp"
+            android:textColor="@color/lightgrey"
+           android:gravity="center"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="MENU &amp; ADDS-ON"
+            android:gravity="center_horizontal"
+            android:layout_weight="6"
+            android:fontFamily="@font/sfprotext_semibold"
+            android:textSize="12dp"
+            android:textColor="@color/lightgrey"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="PRICE"
+            android:layout_weight="1"
+            android:fontFamily="@font/sfprotext_semibold"
+            android:textSize="12dp"
+            android:textColor="@color/lightgrey"
+            android:layout_marginRight="30dp"
+            android:gravity="center_horizontal"/>
+
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/salesRecordList"
+        android:layout_gravity="center"
+        android:layout_width="900dp"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:dividerHeight="1dp"
+        android:footerDividersEnabled="true"
+        android:scrollbars="horizontal" />
 
 </LinearLayout>

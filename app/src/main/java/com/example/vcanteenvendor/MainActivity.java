@@ -1,8 +1,12 @@
 package com.example.vcanteenvendor;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -22,6 +26,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -36,10 +46,17 @@ public class MainActivity extends AppCompatActivity {
     TextView foodName;
     TextView foodExtra;
 
+    Button refreshBtn;
 
+    ListView orderListListView;
 
+    OrderList List;
+    List<Order> orderList;
+    private ProgressDialog progressDialog;
 
+    SharedPreferences sharedPref;
 
+    int vendor_id;
 
 
     @Override
@@ -59,23 +76,12 @@ public class MainActivity extends AppCompatActivity {
         foodName = (TextView) findViewById(R.id.foodName);
         foodExtra = (TextView) findViewById(R.id.foodExtra);
 
-        //set fonts from assets here
-        /*Typeface light = Typeface.createFromAsset(getAssets(),"fonts/SF-Pro-Text-Light.otf");
-        Typeface regular = Typeface.createFromAsset(getAssets(),"fonts/SF-Pro-Text-Regular.otf");
-        Typeface medium = Typeface.createFromAsset(getAssets(),"fonts/SF-Pro-Text-Medium.otf");
-        Typeface semibold = Typeface.createFromAsset(getAssets(),"fonts/SF-Pro-Text-Semibold.otf");
-        Typeface bold = Typeface.createFromAsset(getAssets(),"fonts/SF-Pro-Text-Bold.otf");
+        orderListListView = findViewById(R.id.orderlist);
+        refreshBtn = findViewById(R.id.refreshBtn);
 
-        orderStatusButton.setTypeface(semibold);
-        menuButton.setTypeface(semibold);
-        salesRecordButton.setTypeface(semibold);
-        settingsButton.setTypeface(semibold);*/
-        /*orderNo.setTypeface(regular);
-        foodName.setTypeface(bold);
-        foodExtra.setTypeface(regular);
-        doneButton.setTypeface(semibold);
-        cancelButton.setTypeface(semibold);
-*/
+
+        sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
+        vendor_id =  sharedPref.getInt("vendor_id", 0);
 
 
         //////////////////////////////////////////   Navigation   //////////////////////////////////////
@@ -108,6 +114,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        refreshBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
 
 
 
@@ -116,18 +130,89 @@ public class MainActivity extends AppCompatActivity {
 
         //////////////////////////////////////////   Order Adapter   //////////////////////////////////////
 
-        String[] test = {"Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice","Fried Chicken with Sticky RiceFried Chicken with Sticky Rice","Food3","Food4","Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice","Food6"};
-        ListAdapter testAdapter = new OrderAdapter(this, test);
-        ListView orderlist = findViewById(R.id.orderlist);
-        orderlist.setAdapter(testAdapter);
+
+        List = new OrderList(orderList);
 
 
 
+        orderLoadUp(); //GET DATA FROM JSON
+
+        /*ListAdapter testAdapter = new OrderAdapter(this, List); //Put the arraylist here
+        orderListListView.setAdapter(testAdapter);*/
 
 
 
     }
 
+    private void orderLoadUp() {
+
+        progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog = ProgressDialog.show(MainActivity.this, "",
+                "Loading. Please wait...", true);
+
+        String url="https://vcanteen.herokuapp.com/";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
+        Call<OrderList> call = jsonPlaceHolderApi.getOrder(vendor_id); //SET LOGIC TO INSERT ID HERE
+
+
+        call.enqueue(new Callback<OrderList>() {
+            @Override
+            public void onResponse(Call<OrderList> call, Response<OrderList> response) {
+
+                if (!response.isSuccessful()) {
+                    System.out.println("\n\n\n\n********************"+ "Code: " + response.code() +"********************\n\n\n\n");
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "You have 0 order.",  Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                List = response.body();
+                if(List !=null){
+
+                    ListAdapter testAdapter = new OrderAdapter(MainActivity.this, List); //Put the arraylist here
+                    orderListListView.setAdapter(testAdapter);
+                    progressDialog.dismiss();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<OrderList> call, Throwable t) {
+                //vendorProfile.setText(t.getMessage());
+                System.out.println("\n\n\n\n********************"+ t.getMessage() +"********************\n\n\n\n");
+
+            }
+        });
+
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Closing Activity")
+                .setMessage("Are you sure you want to close this activity?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
 
 
     //////////////////////////////////////////   Navigation(cont.)   //////////////////////////////////////

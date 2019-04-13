@@ -1,22 +1,80 @@
 package com.example.vcanteenvendor;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Menu {
 
+    @SerializedName("foodName")
     private String foodName;
+
+    @SerializedName("price")
     private int foodPrice;
+
+    @SerializedName("foodId")
     private int foodId;
-    private int foodImg;
+
+
+
+
+
+    /////////////////////////////////////  GETTER SETTER CONSTRUCTOR  //////////////////////////////
+
+
+
+    @SerializedName("foodImage")
+    private String foodImg;
+
+    @SerializedName("foodStatus")
+    private String foodStatus;
+
+    @SerializedName("foodType")
+    private String foodType;
+
+    public void setFoodImg(String foodImg) {
+        this.foodImg = foodImg;
+    }
+
+
+
+
+    /////////////////////////////////////  GETTER SETTER CONSTRUCTOR  //////////////////////////////
+
+    public String getFoodImg() {
+        return foodImg;
+    }
+
+    public String getFoodStatus() {
+        return foodStatus;
+    }
+
+    public void setFoodStatus(String foodStatus) {
+        this.foodStatus = foodStatus;
+    }
+
+    public Menu(int foodId, String foodName, int foodPrice, String foodStatus,  String foodImg, String foodType) {
+        this.foodName = foodName;
+        this.foodPrice = foodPrice;
+        this.foodId = foodId;
+        this.foodImg = foodImg;
+        this.foodStatus = foodStatus;
+        this.foodType = foodType;
+    }
+
+    public String getFoodType() {
+        return foodType;
+    }
+
+    public void setFoodType(String foodType) {
+        this.foodType = foodType;
+    }
 
     public Menu(){
 
     }
 
-    public Menu(String foodName, int foodPrice, int foodId, int foodImg) {
-        this.foodName = foodName;
-        this.foodPrice = foodPrice;
-        this.foodId = foodId;
-        this.foodImg = foodImg;
-    }
+
+
+
 
     public String getFoodName() {
         return foodName;
@@ -42,11 +100,5 @@ public class Menu {
         this.foodId = foodId;
     }
 
-    public int getFoodImg() {
-        return foodImg;
-    }
 
-    public void setFoodImg(int foodImg) {
-        this.foodImg = foodImg;
-    }
 }

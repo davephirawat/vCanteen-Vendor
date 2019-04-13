@@ -9,7 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -18,10 +22,16 @@ public class MenuAlacarteRecyclerviewAdapter extends RecyclerView.Adapter<MenuAl
     private Context mContext ;
     private List<Menu> mData ;
 
+    RequestOptions option;
+
 
     public MenuAlacarteRecyclerviewAdapter(Context mContext, List<Menu> mData) {
         this.mContext = mContext;
         this.mData = mData;
+
+        // Request option for Glide
+        //option = new RequestOptions().centerCrop().placeholder(R.drawable.loading_shape).error(R.drawable.loading_shape);
+        option = new RequestOptions().centerCrop();
     }
 
     @Override
@@ -30,30 +40,52 @@ public class MenuAlacarteRecyclerviewAdapter extends RecyclerView.Adapter<MenuAl
         View view ;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         view = mInflater.inflate(R.layout.menu_card,parent,false);
-        return new MenuAlacarteRecyclerviewAdapter.MyViewHolder(view);
-    }
+        final MenuAlacarteRecyclerviewAdapter.MyViewHolder viewHolder = new MenuAlacarteRecyclerviewAdapter.MyViewHolder(view);
 
-    @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        holder.card_food_name.setText(mData.get(position).getFoodName());
-        holder.card_food_price.setText(String.format ("%d", mData.get(position).getFoodPrice()));
-        holder.menuImg.setImageResource(mData.get(position).getFoodImg());
-        /*holder.cardView.setOnClickListener(new View.OnClickListener() {
+        viewHolder.cardViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(mContext,Book_Activity.class);
-
+                Intent i = new Intent(mContext,AddEditMenuActivity.class);
                 // passing data to the book activity
-                intent.putExtra("Title",mData.get(position).getTitle());
-                intent.putExtra("Description",mData.get(position).getDescription());
-                intent.putExtra("Thumbnail",mData.get(position).getThumbnail());
+                i.putExtra("foodId",mData.get(viewHolder.getAdapterPosition()).getFoodId());
+                i.putExtra("foodName",mData.get(viewHolder.getAdapterPosition()).getFoodName());
+                i.putExtra("price",mData.get(viewHolder.getAdapterPosition()).getFoodPrice());
+                i.putExtra("foodImageUrl",mData.get(viewHolder.getAdapterPosition()).getFoodImg());
+                i.putExtra("foodStatus",mData.get(viewHolder.getAdapterPosition()).getFoodStatus());
+                i.putExtra("foodType",mData.get(viewHolder.getAdapterPosition()).getFoodType());
                 // start the activity
-                mContext.startActivity(intent);
+                mContext.startActivity(i);
 
             }
-        });*/
+        });
+
+
+        return viewHolder;
+
+    }
+
+
+
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+
+        holder.card_food_name.setText(mData.get(position).getFoodName());
+        //holder.card_food_price.setText(mData.get(position).getFoodPrice());
+        holder.card_food_price.setText(String.format ("%d", mData.get(position).getFoodPrice()));
+
+        //if (!mData.get(position).getFoodImg().equals(""))
+        Glide.with(mContext).load(mData.get(position).getFoodImg()).apply(option).into(holder.menuImg); //Set image via url using Glide
+
+        if(mData.get(position).getFoodStatus().equals("SOLD_OUT")){
+
+            holder.filter.setVisibility(View.VISIBLE);
+            holder.soldOutLabel.setVisibility(View.VISIBLE);
+        }
+
+
+
     }
 
 
@@ -67,7 +99,12 @@ public class MenuAlacarteRecyclerviewAdapter extends RecyclerView.Adapter<MenuAl
         TextView card_food_name;
         TextView card_food_price;
         ImageView menuImg;
+        RelativeLayout cardViewContainer;
         CardView cardView ;
+        TextView soldOutLabel;
+        ImageView filter;
+
+
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -75,7 +112,10 @@ public class MenuAlacarteRecyclerviewAdapter extends RecyclerView.Adapter<MenuAl
             card_food_name = (TextView) itemView.findViewById(R.id.card_food_name) ;
             card_food_price = (TextView) itemView.findViewById(R.id.card_food_price) ;
             menuImg = (ImageView) itemView.findViewById(R.id.menuImg);
+            cardViewContainer = itemView.findViewById(R.id.cardViewContainer);
             cardView = (CardView) itemView.findViewById(R.id.cardview_id);
+            soldOutLabel = itemView.findViewById(R.id.soldOutLabel);
+            filter = itemView.findViewById(R.id.filter);
 
 
         }

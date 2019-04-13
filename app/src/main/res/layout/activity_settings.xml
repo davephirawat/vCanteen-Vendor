@@ -175,7 +175,6 @@
         android:weightSum="2">
 
 
-
         <!--LEFT PANE-->
 
 
@@ -204,8 +203,8 @@
                 android:layout_below="@+id/vendorProfile"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="32dp"
-                android:background="@drawable/button_white_rounded"
-                app:srcCompat="@drawable/vendor_profile" />
+                android:background="@drawable/img_loading"
+                 />
 
             <EditText
                 android:id="@+id/vendorNameInput"
@@ -224,7 +223,7 @@
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="14dp"
                 android:singleLine="true"
-                android:text="E-san Food"
+                android:text="Loading..."
                 android:textColor="#333333"
                 android:textColorHint="#E0E0E0"
                 android:textSize="18sp" />
@@ -246,7 +245,7 @@
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="14dp"
                 android:singleLine="true"
-                android:text="john.doe@email.com"
+                android:text="Loading..."
                 android:textColor="#333333"
                 android:textColorHint="#E0E0E0"
                 android:textSize="18sp" />
@@ -302,23 +301,20 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="30dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/sfprotext_bold"
                 android:paddingHorizontal="8dp"
                 android:text="sign out"
                 android:textColor="@color/pinkPrimary"
-                android:textSize="16sp"
-                android:layout_marginBottom="30dp"
-                android:layout_marginEnd="20dp"/>
+                android:textSize="16sp" />
 
 
         </RelativeLayout>
 
 
-
-
         <!--RIGHT PANE-->
-
 
 
         <RelativeLayout
@@ -332,68 +328,65 @@
                 android:id="@+id/divider6"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="?android:attr/listDivider"
                 android:layout_alignParentStart="true"
-                />
+                android:background="?android:attr/listDivider" />
 
 
             <TextView
                 android:id="@+id/paymentMethod"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
                 android:fontFamily="@font/sfprotext_bold"
-                android:layout_centerHorizontal="true"
                 android:text="Payment Method"
                 android:textColor="@color/colortext"
                 android:textSize="24sp" />
 
 
             <RelativeLayout
+                android:id="@+id/cuNexRow"
                 android:layout_width="400dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/paymentMethod"
-                android:layout_marginTop="32dp"
                 android:layout_centerHorizontal="true"
-                android:id="@+id/cuNexRow"
-                >
+                android:layout_marginTop="32dp">
 
                 <TextView
+                    android:id="@+id/checkCUNex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/checkCUNex"
                     android:text="LINKED"
                     android:drawableStart="@drawable/ic_check"
                     android:drawablePadding="8dp"
-                    android:textColor="@color/pinkPrimary"
                     android:fontFamily="@font/sfprotext_regular"
                     android:textSize="12sp"
                     android:layout_alignBaseline="@+id/cuNex"
+                    android:visibility="invisible"
                     />
 
                 <TextView
+                    android:id="@+id/cuNex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:id="@+id/cuNex"
                     android:layout_toEndOf="@+id/checkCUNex"
+                    android:fontFamily="@font/sfprotext_regular"
                     android:text="CU NEX"
                     android:textColor="@color/colortext"
-                    android:fontFamily="@font/sfprotext_regular"
-                    android:textSize="18sp"
-                    />
+                    android:textSize="18sp" />
 
                 <TextView
+                    android:id="@+id/linkCUNex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/linkCUNex"
-                    android:text="@string/unlink"
-                    android:layout_alignParentEnd="true"
                     android:layout_alignBaseline="@+id/cuNex"
-                    android:textColor="@color/pinkPrimary"
+                    android:layout_alignParentEnd="true"
                     android:fontFamily="@font/sfprotext_regular"
+                    android:text="@string/unlink"
+                    android:textColor="@color/pinkPrimary"
                     android:textSize="18sp"
-                    />
+                    android:visibility="invisible"/>
 
             </RelativeLayout>
 
@@ -402,8 +395,8 @@
                 android:layout_width="400dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/paymentMethod"
-                android:layout_marginTop="78dp"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="78dp"
 
                 >
 
@@ -417,7 +410,8 @@
                     android:fontFamily="@font/sfprotext_regular"
                     android:text="LINKED"
                     android:textColor="@color/pinkPrimary"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="invisible"/>
 
                 <TextView
                     android:id="@+id/scbEasy"
@@ -439,7 +433,8 @@
                     android:fontFamily="@font/sfprotext_regular"
                     android:text="@string/unlink"
                     android:textColor="@color/pinkPrimary"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:visibility="invisible"/>
 
             </RelativeLayout>
 
@@ -449,8 +444,8 @@
                 android:layout_width="400dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/paymentMethod"
-                android:layout_marginTop="124dp"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="124dp"
 
                 >
 
@@ -464,7 +459,8 @@
                     android:fontFamily="@font/sfprotext_regular"
                     android:text="LINKED"
                     android:textColor="@color/pinkPrimary"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="invisible"/>
 
                 <TextView
                     android:id="@+id/kPlus"
@@ -486,7 +482,8 @@
                     android:fontFamily="@font/sfprotext_regular"
                     android:text="@string/unlink"
                     android:textColor="@color/pinkPrimary"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:visibility="invisible"/>
 
             </RelativeLayout>
 
@@ -496,8 +493,8 @@
                 android:layout_width="400dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/paymentMethod"
-                android:layout_marginTop="170dp"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="170dp"
 
                 >
 
@@ -512,7 +509,7 @@
                     android:text="LINKED"
                     android:textColor="@color/pinkPrimary"
                     android:textSize="12sp"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
                 <TextView
                     android:id="@+id/trueMoney"
@@ -534,7 +531,8 @@
                     android:fontFamily="@font/sfprotext_semibold"
                     android:text="LINK"
                     android:textColor="@color/pinkPrimary"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:visibility="invisible"/>
 
             </RelativeLayout>
 
