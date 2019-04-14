@@ -270,7 +270,7 @@ public class SettingsActivity extends AppCompatActivity {
                         public void onClick(View v) {
 
                             positiveButton.setBackgroundResource(R.drawable.button_grey_rounded);
-                            openCloseVendor("CLOSE");
+                            openCloseVendor("CLOSED");
 
 
                             new Handler().postDelayed(new Runnable() {
