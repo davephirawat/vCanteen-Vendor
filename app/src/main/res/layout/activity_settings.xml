@@ -324,6 +324,20 @@
             android:paddingVertical="12dp">
 
 
+            <Button
+                android:id="@+id/reportButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/reportText"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="30dp"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/sfprotext_bold"
+                android:paddingHorizontal="8dp"
+                android:text="REPORT"
+                android:textColor="@color/pinkPrimary"
+                android:textSize="16sp" />
+
             <View
                 android:id="@+id/divider6"
                 android:layout_width="1dp"
@@ -334,7 +348,7 @@
 
             <TextView
                 android:id="@+id/paymentMethod"
-                android:layout_width="wrap_content"
+                android:layout_width="400dp"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
@@ -343,6 +357,51 @@
                 android:textColor="@color/colortext"
                 android:textSize="24sp" />
 
+
+            <TextView
+                android:id="@+id/bugReportTitle"
+                android:layout_width="400dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/trueMoneyRow"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="70dp"
+                android:fontFamily="@font/sfprotext_bold"
+                android:text="Bug Report"
+                android:textColor="@color/colortext"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/textCounter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/reportText"
+                android:layout_alignEnd="@+id/bugReportTitle"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="3dp"
+                android:fontFamily="@font/sfprotext_medium"
+                android:text="0/300"
+                android:textAlignment="textEnd"
+                android:textSize="14sp" />
+            <EditText
+                android:id="@+id/reportText"
+                android:layout_width="400dp"
+                android:layout_height="221dp"
+                android:layout_below="@+id/bugReportTitle"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bug_report_bg_border"
+                android:elevation="4dp"
+                android:ems="10"
+                android:gravity="top"
+                android:hint="Report any bug here, every little things will improve your experiences with the app :)"
+                android:inputType="textLongMessage|textMultiLine"
+                android:lineSpacingMultiplier="1.25"
+                android:lines="8"
+                android:maxLength="300"
+                android:padding="16dp"
+                android:textSize="14sp" />
 
             <RelativeLayout
                 android:id="@+id/cuNexRow"
@@ -356,14 +415,13 @@
                     android:id="@+id/checkCUNex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="LINKED"
+                    android:layout_alignBaseline="@+id/cuNex"
                     android:drawableStart="@drawable/ic_check"
                     android:drawablePadding="8dp"
                     android:fontFamily="@font/sfprotext_regular"
+                    android:text="LINKED"
                     android:textSize="12sp"
-                    android:layout_alignBaseline="@+id/cuNex"
-                    android:visibility="invisible"
-                    />
+                    android:visibility="invisible" />
 
                 <TextView
                     android:id="@+id/cuNex"
@@ -518,7 +576,7 @@
                     android:layout_marginStart="24dp"
                     android:layout_toEndOf="@+id/checkTrueMoney"
                     android:fontFamily="@font/sfprotext_regular"
-                    android:text="K PLUS"
+                    android:text="TrueMoney Wallet"
                     android:textColor="@color/colortext"
                     android:textSize="18sp" />
 
